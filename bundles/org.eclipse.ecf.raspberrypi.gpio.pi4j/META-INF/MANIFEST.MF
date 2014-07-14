@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: ECF Raspberry Pi Pi4j
+Bundle-SymbolicName: org.eclipse.ecf.raspberrypi.gpio.pi4j
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: Eclipse.org - ECF
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Import-Package: com.pi4j.io.gpio;version="1.0.0.SNAPSHOT",
+ com.pi4j.io.gpio.impl;version="1.0.0.SNAPSHOT",
+ org.eclipse.ecf.raspberrypi.gpio;version="1.0.0",
+ org.osgi.framework;version="1.8.0"
+Bundle-ActivationPolicy: lazy
+Bundle-Activator: org.eclipse.ecf.raspberrypi.gpio.pi4j.Activator
