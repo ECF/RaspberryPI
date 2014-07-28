@@ -40,6 +40,6 @@ public interface IGPIOPin {
 	public boolean toggle();
 	
 	public void pulse(long duration, boolean pulseState);
-	public void blink(long delay, long duration, boolean blinkeState);
+	public void blink(long delay, long duration, boolean blinkState);
 	
 }
