@@ -8,6 +8,7 @@ import org.osgi.framework.BundleContext;
 
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
+import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.RaspiPin;
 
@@ -24,128 +25,74 @@ public class Activator implements BundleActivator {
         createAndRegisterPins();
 	}
 
-	private void createAndRegisterPins() {
-        // provision gpio pin #01 as an output pin and set 
+	private Pin getPin(int pinId) {
+		switch (pinId) {
+		case 0:
+			return RaspiPin.GPIO_00;
+		case 1:
+			return RaspiPin.GPIO_01;
+		case 2:
+			return RaspiPin.GPIO_02;
+		case 3:
+			return RaspiPin.GPIO_03;
+		case 4:
+			return RaspiPin.GPIO_04;
+		case 5:
+			return RaspiPin.GPIO_05;
+		case 6:
+			return RaspiPin.GPIO_06;
+		case 7:
+			return RaspiPin.GPIO_07;
+		case 8:
+			return RaspiPin.GPIO_08;
+		case 9:
+			return RaspiPin.GPIO_09;
+		case 10:
+			return RaspiPin.GPIO_10;
+		case 11:
+			return RaspiPin.GPIO_11;
+		case 12:
+			return RaspiPin.GPIO_12;
+		case 13:
+			return RaspiPin.GPIO_13;
+		case 14:
+			return RaspiPin.GPIO_14;
+		case 15:
+			return RaspiPin.GPIO_15;
+		case 16:
+			return RaspiPin.GPIO_16;
+		case 17:
+			return RaspiPin.GPIO_17;
+		case 18:
+			return RaspiPin.GPIO_18;
+		case 19:
+			return RaspiPin.GPIO_19;
+		case 20:
+			return RaspiPin.GPIO_20;
+			default:
+				return null;
+		}
+	}
+	
+	private void createAndRegisterPin(int pinId) {
         Hashtable<String,Object> pinProps = new Hashtable<String,Object>();
-        pinProps.put(IGPIOPin.PIN_ID_PROP, 1);
-        pinProps.put(IGPIOPin.PIN_NAME_PROP, "1");
-        pinProps.put(IGPIOPin.PIN_DEFAULTSTATE_PROP, Boolean.TRUE);
-        context.registerService(new String[] { IGPIOPin.class.getName() }, new GPIOPin(gpio.provisionDigitalOutputPin(RaspiPin.GPIO_01, "1", PinState.HIGH)), pinProps);
-        
-        pinProps = new Hashtable<String,Object>();
-        pinProps.put(IGPIOPin.PIN_ID_PROP, 2);
-        pinProps.put(IGPIOPin.PIN_NAME_PROP, "2");
-        pinProps.put(IGPIOPin.PIN_DEFAULTSTATE_PROP, Boolean.TRUE);
-        context.registerService(new String[] { IGPIOPin.class.getName() }, new GPIOPin(gpio.provisionDigitalOutputPin(RaspiPin.GPIO_02, "2", PinState.HIGH)), pinProps);
-
-        pinProps = new Hashtable<String,Object>();
-        pinProps.put(IGPIOPin.PIN_ID_PROP, 3);
-        pinProps.put(IGPIOPin.PIN_NAME_PROP, "3");
-        pinProps.put(IGPIOPin.PIN_DEFAULTSTATE_PROP, Boolean.TRUE);
-        context.registerService(new String[] { IGPIOPin.class.getName() }, new GPIOPin(gpio.provisionDigitalOutputPin(RaspiPin.GPIO_03, "3", PinState.HIGH)), pinProps);
-
-        pinProps = new Hashtable<String,Object>();
-        pinProps.put(IGPIOPin.PIN_ID_PROP, 4);
-        pinProps.put(IGPIOPin.PIN_NAME_PROP, "4");
-        pinProps.put(IGPIOPin.PIN_DEFAULTSTATE_PROP, Boolean.TRUE);
-        context.registerService(new String[] { IGPIOPin.class.getName() }, new GPIOPin(gpio.provisionDigitalOutputPin(RaspiPin.GPIO_04, "4", PinState.HIGH)), pinProps);
-
-        pinProps = new Hashtable<String,Object>();
-        pinProps.put(IGPIOPin.PIN_ID_PROP, 5);
-        pinProps.put(IGPIOPin.PIN_NAME_PROP, "5");
-        pinProps.put(IGPIOPin.PIN_DEFAULTSTATE_PROP, Boolean.TRUE);
-        context.registerService(new String[] { IGPIOPin.class.getName() }, new GPIOPin(gpio.provisionDigitalOutputPin(RaspiPin.GPIO_05, "5", PinState.HIGH)), pinProps);
-
-        pinProps = new Hashtable<String,Object>();
-        pinProps.put(IGPIOPin.PIN_ID_PROP, 6);
-        pinProps.put(IGPIOPin.PIN_NAME_PROP, "6");
-        pinProps.put(IGPIOPin.PIN_DEFAULTSTATE_PROP, Boolean.TRUE);
-        context.registerService(new String[] { IGPIOPin.class.getName() }, new GPIOPin(gpio.provisionDigitalOutputPin(RaspiPin.GPIO_06, "6", PinState.HIGH)), pinProps);
-
-        pinProps = new Hashtable<String,Object>();
-        pinProps.put(IGPIOPin.PIN_ID_PROP, 7);
-        pinProps.put(IGPIOPin.PIN_NAME_PROP, "7");
-        pinProps.put(IGPIOPin.PIN_DEFAULTSTATE_PROP, Boolean.TRUE);
-        context.registerService(new String[] { IGPIOPin.class.getName() }, new GPIOPin(gpio.provisionDigitalOutputPin(RaspiPin.GPIO_07, "7", PinState.HIGH)), pinProps);
-
-        pinProps = new Hashtable<String,Object>();
-        pinProps.put(IGPIOPin.PIN_ID_PROP, 8);
-        pinProps.put(IGPIOPin.PIN_NAME_PROP, "8");
-        pinProps.put(IGPIOPin.PIN_DEFAULTSTATE_PROP, Boolean.TRUE);
-        context.registerService(new String[] { IGPIOPin.class.getName() }, new GPIOPin(gpio.provisionDigitalOutputPin(RaspiPin.GPIO_08, "8", PinState.HIGH)), pinProps);
-
-        pinProps = new Hashtable<String,Object>();
-        pinProps.put(IGPIOPin.PIN_ID_PROP, 9);
-        pinProps.put(IGPIOPin.PIN_NAME_PROP, "9");
-        pinProps.put(IGPIOPin.PIN_DEFAULTSTATE_PROP, Boolean.TRUE);
-        context.registerService(new String[] { IGPIOPin.class.getName() }, new GPIOPin(gpio.provisionDigitalOutputPin(RaspiPin.GPIO_09, "9", PinState.HIGH)), pinProps);
-
-        pinProps = new Hashtable<String,Object>();
-        pinProps.put(IGPIOPin.PIN_ID_PROP, 10);
-        pinProps.put(IGPIOPin.PIN_NAME_PROP, "10");
-        pinProps.put(IGPIOPin.PIN_DEFAULTSTATE_PROP, Boolean.TRUE);
-        context.registerService(new String[] { IGPIOPin.class.getName() }, new GPIOPin(gpio.provisionDigitalOutputPin(RaspiPin.GPIO_10, "10", PinState.HIGH)), pinProps);
-
-        pinProps = new Hashtable<String,Object>();
-        pinProps.put(IGPIOPin.PIN_ID_PROP, 11);
-        pinProps.put(IGPIOPin.PIN_NAME_PROP, "11");
-        pinProps.put(IGPIOPin.PIN_DEFAULTSTATE_PROP, Boolean.TRUE);
-        context.registerService(new String[] { IGPIOPin.class.getName() }, new GPIOPin(gpio.provisionDigitalOutputPin(RaspiPin.GPIO_11, "11", PinState.HIGH)), pinProps);
-
-        pinProps = new Hashtable<String,Object>();
-        pinProps.put(IGPIOPin.PIN_ID_PROP, 12);
-        pinProps.put(IGPIOPin.PIN_NAME_PROP, "12");
-        pinProps.put(IGPIOPin.PIN_DEFAULTSTATE_PROP, Boolean.TRUE);
-        context.registerService(new String[] { IGPIOPin.class.getName() }, new GPIOPin(gpio.provisionDigitalOutputPin(RaspiPin.GPIO_12, "12", PinState.HIGH)), pinProps);
-
-        pinProps = new Hashtable<String,Object>();
-        pinProps.put(IGPIOPin.PIN_ID_PROP, 13);
-        pinProps.put(IGPIOPin.PIN_NAME_PROP, "13");
-        pinProps.put(IGPIOPin.PIN_DEFAULTSTATE_PROP, Boolean.TRUE);
-        context.registerService(new String[] { IGPIOPin.class.getName() }, new GPIOPin(gpio.provisionDigitalOutputPin(RaspiPin.GPIO_13, "13", PinState.HIGH)), pinProps);
-
-        pinProps = new Hashtable<String,Object>();
-        pinProps.put(IGPIOPin.PIN_ID_PROP, 14);
-        pinProps.put(IGPIOPin.PIN_NAME_PROP, "14");
-        pinProps.put(IGPIOPin.PIN_DEFAULTSTATE_PROP, Boolean.TRUE);
-        context.registerService(new String[] { IGPIOPin.class.getName() }, new GPIOPin(gpio.provisionDigitalOutputPin(RaspiPin.GPIO_14, "14", PinState.HIGH)), pinProps);
-
-        pinProps = new Hashtable<String,Object>();
-        pinProps.put(IGPIOPin.PIN_ID_PROP, 15);
-        pinProps.put(IGPIOPin.PIN_NAME_PROP, "15");
-        pinProps.put(IGPIOPin.PIN_DEFAULTSTATE_PROP, Boolean.TRUE);
-        context.registerService(new String[] { IGPIOPin.class.getName() }, new GPIOPin(gpio.provisionDigitalOutputPin(RaspiPin.GPIO_15, "15", PinState.HIGH)), pinProps);
-
-        pinProps = new Hashtable<String,Object>();
-        pinProps.put(IGPIOPin.PIN_ID_PROP, 16);
-        pinProps.put(IGPIOPin.PIN_NAME_PROP, "16");
-        pinProps.put(IGPIOPin.PIN_DEFAULTSTATE_PROP, Boolean.TRUE);
-        context.registerService(new String[] { IGPIOPin.class.getName() }, new GPIOPin(gpio.provisionDigitalOutputPin(RaspiPin.GPIO_16, "16", PinState.HIGH)), pinProps);
-
-        pinProps = new Hashtable<String,Object>();
-        pinProps.put(IGPIOPin.PIN_ID_PROP, 17);
-        pinProps.put(IGPIOPin.PIN_NAME_PROP, "17");
-        pinProps.put(IGPIOPin.PIN_DEFAULTSTATE_PROP, Boolean.TRUE);
-        context.registerService(new String[] { IGPIOPin.class.getName() }, new GPIOPin(gpio.provisionDigitalOutputPin(RaspiPin.GPIO_17, "17", PinState.HIGH)), pinProps);
-
-        pinProps = new Hashtable<String,Object>();
-        pinProps.put(IGPIOPin.PIN_ID_PROP, 18);
-        pinProps.put(IGPIOPin.PIN_NAME_PROP, "18");
-        pinProps.put(IGPIOPin.PIN_DEFAULTSTATE_PROP, Boolean.TRUE);
-        context.registerService(new String[] { IGPIOPin.class.getName() }, new GPIOPin(gpio.provisionDigitalOutputPin(RaspiPin.GPIO_18, "18", PinState.HIGH)), pinProps);
-
-        pinProps = new Hashtable<String,Object>();
-        pinProps.put(IGPIOPin.PIN_ID_PROP, 19);
-        pinProps.put(IGPIOPin.PIN_NAME_PROP, "19");
-        pinProps.put(IGPIOPin.PIN_DEFAULTSTATE_PROP, Boolean.TRUE);
-        context.registerService(new String[] { IGPIOPin.class.getName() }, new GPIOPin(gpio.provisionDigitalOutputPin(RaspiPin.GPIO_19, "19", PinState.HIGH)), pinProps);
-
-        pinProps = new Hashtable<String,Object>();
-        pinProps.put(IGPIOPin.PIN_ID_PROP, 20);
-        pinProps.put(IGPIOPin.PIN_NAME_PROP, "20");
-        pinProps.put(IGPIOPin.PIN_DEFAULTSTATE_PROP, Boolean.TRUE);
-        context.registerService(new String[] { IGPIOPin.class.getName() }, new GPIOPin(gpio.provisionDigitalOutputPin(RaspiPin.GPIO_20, "20", PinState.HIGH)), pinProps);
-
+        pinProps.put(IGPIOPin.PIN_ID_PROP, pinId);
+        String name = String.valueOf(pinId);
+        pinProps.put(IGPIOPin.PIN_NAME_PROP, name);
+        pinProps.put(IGPIOPin.PIN_DEFAULTSTATE_PROP, Boolean.FALSE);
+        Pin pin = getPin(pinId);
+        context.registerService(new String[] { IGPIOPin.class.getName() }, new GPIOPin(gpio.provisionDigitalOutputPin(pin, name, PinState.LOW)), pinProps);
+	}
+	
+	private void createAndRegisterPins() {
+		
+		String pinsProp = System.getProperty("ecf.gpio.pi4j.pins","0");
+		if (pinsProp != null) {
+			// Parse the pinsProp
+			String[] pinStrs = pinsProp.trim().split("\\s*,\\s*");
+			for(String pinStr: pinStrs) 
+				createAndRegisterPin(new Integer(pinStr).intValue());
+		}
 	}
 	
 	@Override

@@ -27,11 +27,11 @@ public class Activator implements BundleActivator {
 
 			@Override
 			public IGPIOPin addingService(ServiceReference<IGPIOPin> reference) {
-				IGPIOPin pin = null;
-				if (reference != null) {
-					System.out.println("Adding GPIO Pin service. ref="+reference);
-					pin = context.getService(reference);
-				}
+				System.out.println("Adding GPIO Pin service.   id="+reference.getProperty(IGPIOPin.PIN_ID_PROP));
+				IGPIOPin pin = context.getService(reference);
+				System.out.println("  current pin state is "+(pin.getState()?"HIGH":"LOW"));
+				System.out.println("  setting state to HIGH");
+				pin.setState(true);
 				return pin;
 			}
 
@@ -43,6 +43,9 @@ public class Activator implements BundleActivator {
 			@Override
 			public void removedService(ServiceReference<IGPIOPin> reference,
 					IGPIOPin service) {
+				System.out.println("Removing GPIO Pin service. id="+reference.getProperty(IGPIOPin.PIN_ID_PROP));
+				System.out.println("  setting state to LOW");
+				service.setState(false);
 			}
 		});
 		pinTracker.open();
