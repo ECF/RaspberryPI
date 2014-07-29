@@ -63,3 +63,4 @@ Export-Package: com.pi4j.component;version="0.0.5",
  com.pi4j.temperature;version="0.0.5",
  com.pi4j.util;version="0.0.5",
  com.pi4j.wiringpi;version="0.0.5"
+Import-Package: org.osgi.framework;version="1.8.0"
