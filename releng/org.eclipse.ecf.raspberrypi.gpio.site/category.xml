@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <bundle id="org.eclipse.ecf.raspberrypi.gpio" version="1.0.0.qualifier">
-      <category name="interface"/>
-   </bundle>
-   <bundle id="org.eclipse.ecf.raspberrypi.gpio.pi4j" version="1.0.0.qualifier">
+   <feature url="features/org.eclipse.ecf.raspberrypi.gpio.pi4j.feature_1.0.0.qualifier.jar" id="org.eclipse.ecf.raspberrypi.gpio.pi4j.feature" version="1.0.0.qualifier">
       <category name="impl"/>
-   </bundle>
+   </feature>
+   <feature url="features/org.eclipse.ecf.raspberrypi.gpio.feature_1.0.0.qualifier.jar" id="org.eclipse.ecf.raspberrypi.gpio.feature" version="1.0.0.qualifier">
+      <category name="interface"/>
+   </feature>
    <category-def name="interface" label="Raspberry Pi GPIO Interface"/>
    <category-def name="impl" label="Raspberry Pi GPIO Implementation with PI4J"/>
 </site>
