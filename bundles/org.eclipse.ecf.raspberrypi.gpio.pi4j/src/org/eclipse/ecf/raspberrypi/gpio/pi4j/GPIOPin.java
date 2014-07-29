@@ -8,11 +8,11 @@ import com.pi4j.io.gpio.PinState;
 public class GPIOPin implements IGPIOPin {
 
 	private final GpioPinDigitalOutput pinImpl;
-	
+
 	public GPIOPin(GpioPinDigitalOutput pinImpl) {
 		this.pinImpl = pinImpl;
 	}
-	
+
 	@Override
 	public boolean getState() {
 		return (this.pinImpl.getState() == PinState.HIGH);
@@ -31,12 +31,13 @@ public class GPIOPin implements IGPIOPin {
 
 	@Override
 	public void pulse(long duration, boolean pulseState) {
-		this.pinImpl.pulse(duration,pulseState);
+		this.pinImpl.pulse(duration, pulseState);
 	}
 
 	@Override
 	public void blink(long delay, long duration, boolean blinkState) {
-		this.pinImpl.blink(delay,duration,blinkState?PinState.HIGH:PinState.LOW);
+		this.pinImpl.blink(delay, duration, blinkState ? PinState.HIGH
+				: PinState.LOW);
 	}
 
 }
