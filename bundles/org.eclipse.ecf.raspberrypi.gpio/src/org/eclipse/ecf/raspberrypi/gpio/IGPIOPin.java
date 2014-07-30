@@ -35,11 +35,4 @@ public interface IGPIOPin {
 	public static final String PIN_NAME_PROP = "org.eclipse.ecf.raspberrypi.gpio.pin.name";
 	public static final String PIN_DEFAULTSTATE_PROP = "org.eclipse.ecf.raspberrypi.gpio.pin.defaultstate";
 	
-    public boolean getState();
-    public void setState(boolean value);
-	public boolean toggle();
-	
-	public void pulse(long duration, boolean pulseState);
-	public void blink(long delay, long duration, boolean blinkState);
-	
 }

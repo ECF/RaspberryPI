@@ -1,11 +1,11 @@
 package org.eclipse.ecf.raspberrypi.gpio.pi4j;
 
-import org.eclipse.ecf.raspberrypi.gpio.IGPIOPin;
+import org.eclipse.ecf.raspberrypi.gpio.IGPIOPinOutput;
 
 import com.pi4j.io.gpio.GpioPinDigitalOutput;
 import com.pi4j.io.gpio.PinState;
 
-public class GPIOPin implements IGPIOPin {
+public class GPIOPin implements IGPIOPinOutput {
 
 	private final GpioPinDigitalOutput pinImpl;
 

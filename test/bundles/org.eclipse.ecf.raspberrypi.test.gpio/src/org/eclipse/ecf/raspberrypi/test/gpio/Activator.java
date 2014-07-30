@@ -1,6 +1,6 @@
 package org.eclipse.ecf.raspberrypi.test.gpio;
 
-import org.eclipse.ecf.raspberrypi.gpio.IGPIOPin;
+import org.eclipse.ecf.raspberrypi.gpio.IGPIOPinOutput;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
@@ -15,7 +15,7 @@ public class Activator implements BundleActivator {
 		return context;
 	}
 
-	private ServiceTracker<IGPIOPin,IGPIOPin> pinTracker;
+	private ServiceTracker<IGPIOPinOutput,IGPIOPinOutput> pinTracker;
 	
 	/*
 	 * (non-Javadoc)
@@ -23,12 +23,12 @@ public class Activator implements BundleActivator {
 	 */
 	public void start(BundleContext bundleContext) throws Exception {
 		Activator.context = bundleContext;
-		pinTracker = new ServiceTracker<IGPIOPin,IGPIOPin>(context, IGPIOPin.class, new ServiceTrackerCustomizer<IGPIOPin,IGPIOPin>() {
+		pinTracker = new ServiceTracker<IGPIOPinOutput,IGPIOPinOutput>(context, IGPIOPinOutput.class, new ServiceTrackerCustomizer<IGPIOPinOutput,IGPIOPinOutput>() {
 
 			@Override
-			public IGPIOPin addingService(ServiceReference<IGPIOPin> reference) {
-				System.out.println("Adding GPIO Pin service.   id="+reference.getProperty(IGPIOPin.PIN_ID_PROP));
-				IGPIOPin pin = context.getService(reference);
+			public IGPIOPinOutput addingService(ServiceReference<IGPIOPinOutput> reference) {
+				System.out.println("Adding GPIO Pin Output service.   id="+reference.getProperty(IGPIOPinOutput.PIN_ID_PROP));
+				IGPIOPinOutput pin = context.getService(reference);
 				System.out.println("  current pin state is "+(pin.getState()?"HIGH":"LOW"));
 				System.out.println("  setting state to HIGH");
 				pin.setState(true);
@@ -36,14 +36,14 @@ public class Activator implements BundleActivator {
 			}
 
 			@Override
-			public void modifiedService(ServiceReference<IGPIOPin> reference,
-					IGPIOPin service) {
+			public void modifiedService(ServiceReference<IGPIOPinOutput> reference,
+					IGPIOPinOutput service) {
 			}
 
 			@Override
-			public void removedService(ServiceReference<IGPIOPin> reference,
-					IGPIOPin service) {
-				System.out.println("Removing GPIO Pin service. id="+reference.getProperty(IGPIOPin.PIN_ID_PROP));
+			public void removedService(ServiceReference<IGPIOPinOutput> reference,
+					IGPIOPinOutput service) {
+				System.out.println("Removing GPIO Pin service. id="+reference.getProperty(IGPIOPinOutput.PIN_ID_PROP));
 				System.out.println("  setting state to LOW");
 				service.setState(false);
 			}

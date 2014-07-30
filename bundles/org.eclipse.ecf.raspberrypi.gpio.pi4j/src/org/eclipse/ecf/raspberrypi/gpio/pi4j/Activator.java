@@ -6,7 +6,7 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Properties;
 
-import org.eclipse.ecf.raspberrypi.gpio.IGPIOPin;
+import org.eclipse.ecf.raspberrypi.gpio.IGPIOPinOutput;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.Constants;
@@ -30,7 +30,7 @@ public class Activator implements BundleActivator {
 
 	private static BundleContext context;
 	private GpioController gpio;
-	private List<ServiceRegistration<IGPIOPin>> pinRegistrations = new ArrayList<ServiceRegistration<IGPIOPin>>();
+	private List<ServiceRegistration<IGPIOPinOutput>> pinRegistrations = new ArrayList<ServiceRegistration<IGPIOPinOutput>>();
 
 	@Override
 	public void start(BundleContext ctxt) throws Exception {
@@ -49,8 +49,8 @@ public class Activator implements BundleActivator {
 		// If the pin has been exported, then pinProps will
 		// contain the OSGi remote services export properties,
 		// and will be exported.
-		ServiceRegistration<IGPIOPin> reg = context.registerService(
-				IGPIOPin.class,
+		ServiceRegistration<IGPIOPinOutput> reg = context.registerService(
+				IGPIOPinOutput.class,
 				new GPIOPin(gpio.provisionDigitalOutputPin(getPin(pinId),
 						String.valueOf(pinId), PinState.LOW)), pinProps);
 		pinRegistrations.add(reg);
@@ -60,11 +60,11 @@ public class Activator implements BundleActivator {
 		Hashtable<String, Object> pinProps = new Hashtable<String, Object>();
 		String name = String.valueOf(pinId);
 		// Use the String name of the pinId for the PIN_ID_PROP
-		pinProps.put(IGPIOPin.PIN_ID_PROP, name);
+		pinProps.put(IGPIOPinOutput.PIN_ID_PROP, name);
 		// Also use it as the name
-		pinProps.put(IGPIOPin.PIN_NAME_PROP, name);
+		pinProps.put(IGPIOPinOutput.PIN_NAME_PROP, name);
 		// Set the default state to FALSE/off
-		pinProps.put(IGPIOPin.PIN_DEFAULTSTATE_PROP, Boolean.FALSE);
+		pinProps.put(IGPIOPinOutput.PIN_DEFAULTSTATE_PROP, Boolean.FALSE);
 		
 		// If this pin is specified as one to export
 		if (PINS_EXPORT.contains(String.valueOf(pinId))) {
@@ -99,7 +99,7 @@ public class Activator implements BundleActivator {
 
 	@Override
 	public void stop(BundleContext context) throws Exception {
-		for (ServiceRegistration<IGPIOPin> reg : pinRegistrations)
+		for (ServiceRegistration<IGPIOPinOutput> reg : pinRegistrations)
 			reg.unregister();
 		pinRegistrations.clear();
 
