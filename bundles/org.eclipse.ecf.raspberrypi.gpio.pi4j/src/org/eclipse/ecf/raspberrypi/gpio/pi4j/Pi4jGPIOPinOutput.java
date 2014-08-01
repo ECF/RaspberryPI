@@ -9,7 +9,6 @@
 package org.eclipse.ecf.raspberrypi.gpio.pi4j;
 
 import java.util.Dictionary;
-import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
 
@@ -37,8 +36,6 @@ public class Pi4jGPIOPinOutput extends Pi4jGPIOPin implements IGPIOPinOutput {
 		return registerGPIOPinOutput(pinId, pinProps, null);
 	}
 
-	private static Map<ServiceRegistration<IGPIOPinOutput>, Pi4jGPIOPinOutput> regToPinOutputMap = new HashMap<ServiceRegistration<IGPIOPinOutput>, Pi4jGPIOPinOutput>();
-
 	@SuppressWarnings("unchecked")
 	public static ServiceRegistration<IGPIOPinOutput> registerGPIOPinOutput(
 			int pinId, Map<String, Object> pinProps, BundleContext context) {
@@ -47,11 +44,6 @@ public class Pi4jGPIOPinOutput extends Pi4jGPIOPin implements IGPIOPinOutput {
 			throw new IllegalArgumentException("Invalid pinId=" + pinId
 					+ ".  pinId must be in range " + IGPIOPin.PIN_00 + "-"
 					+ IGPIOPin.PIN_20);
-		// We only provision a pin once
-		if (isProvisioned(pinId))
-			throw new IllegalArgumentException("pinId=" + pinId
-					+ " has already been provisioned");
-
 		if (context == null)
 			context = Activator.getContext();
 
@@ -84,6 +76,15 @@ public class Pi4jGPIOPinOutput extends Pi4jGPIOPin implements IGPIOPinOutput {
 			IGPIOPin.Util.setPinName(registerProps, pn);
 		}
 		final String pinName = pn;
+
+		// We only provision a pin once
+		if (isProvisioned(pinId))
+			throw new IllegalArgumentException(
+					"pinId="
+							+ pinId
+							+ " has already been provisioned and can't be re-provisioned");
+		final GpioPinDigitalOutput pi4jPin = Activator.getGPIOController()
+				.provisionDigitalOutputPin(pin, pinName, initPinState);
 		// Now create new Pi4jGPIOPinOutput instance using pi4j pin provisioned,
 		// and register
 		return context.registerService(IGPIOPinOutput.class,
@@ -91,42 +92,21 @@ public class Pi4jGPIOPinOutput extends Pi4jGPIOPin implements IGPIOPinOutput {
 					@Override
 					public IGPIOPinOutput getService(Bundle bundle,
 							ServiceRegistration<IGPIOPinOutput> registration) {
-						Pi4jGPIOPinOutput po = null;
-						synchronized (regToPinOutputMap) {
-							po = regToPinOutputMap.get(registration);
-							if (po == null) {
-								// Using GPIOController, provision Pi4j digital
-								// output pin
-								GpioPinDigitalOutput pi4jPin = Activator
-										.getGPIOController()
-										.provisionDigitalOutputPin(pin,
-												pinName, initPinState);
-								// Create pin output
-								po = new Pi4jGPIOPinOutput(pi4jPin);
-								regToPinOutputMap.put(registration, po);
-							}
-						}
-						return po;
+						return new Pi4jGPIOPinOutput(pi4jPin);
 					}
 
 					@Override
 					public void ungetService(Bundle bundle,
 							ServiceRegistration<IGPIOPinOutput> registration,
 							IGPIOPinOutput service) {
-						synchronized (regToPinOutputMap) {
-							Pi4jGPIOPinOutput po = regToPinOutputMap
-									.get(registration);
-							if (po != null)
-								po.close();
-						}
 					}
 				}, (Dictionary<String, Object>) registerProps);
 	}
 
 	private GpioPinDigitalOutput pinImpl;
 
-	public Pi4jGPIOPinOutput(GpioPinDigitalOutput pinImpl) {
-		this.pinImpl = pinImpl;
+	public Pi4jGPIOPinOutput(GpioPinDigitalOutput pinOutput) {
+		this.pinImpl = pinOutput;
 	}
 
 	public int getPinId() {
