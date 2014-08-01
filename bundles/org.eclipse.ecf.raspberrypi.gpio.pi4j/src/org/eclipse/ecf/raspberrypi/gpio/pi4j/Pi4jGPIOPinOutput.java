@@ -9,13 +9,16 @@
 package org.eclipse.ecf.raspberrypi.gpio.pi4j;
 
 import java.util.Dictionary;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
 
 import org.eclipse.ecf.internal.raspberrypi.gpio.pi4j.Activator;
 import org.eclipse.ecf.raspberrypi.gpio.IGPIOPin;
 import org.eclipse.ecf.raspberrypi.gpio.IGPIOPinOutput;
+import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceFactory;
 import org.osgi.framework.ServiceRegistration;
 
 import com.pi4j.io.gpio.GpioPinDigitalOutput;
@@ -34,14 +37,20 @@ public class Pi4jGPIOPinOutput extends Pi4jGPIOPin implements IGPIOPinOutput {
 		return registerGPIOPinOutput(pinId, pinProps, null);
 	}
 
+	private static Map<ServiceRegistration<IGPIOPinOutput>, Pi4jGPIOPinOutput> regToPinOutputMap = new HashMap<ServiceRegistration<IGPIOPinOutput>, Pi4jGPIOPinOutput>();
+
 	@SuppressWarnings("unchecked")
 	public static ServiceRegistration<IGPIOPinOutput> registerGPIOPinOutput(
 			int pinId, Map<String, Object> pinProps, BundleContext context) {
-		Pin pin = getPinForId(pinId);
+		final Pin pin = getPinForId(pinId);
 		if (pin == null)
 			throw new IllegalArgumentException("Invalid pinId=" + pinId
 					+ ".  pinId must be in range " + IGPIOPin.PIN_00 + "-"
 					+ IGPIOPin.PIN_20);
+		// We only provision a pin once
+		if (isProvisioned(pinId))
+			throw new IllegalArgumentException("pinId=" + pinId
+					+ " has already been provisioned");
 
 		if (context == null)
 			context = Activator.getContext();
@@ -54,66 +63,119 @@ public class Pi4jGPIOPinOutput extends Pi4jGPIOPin implements IGPIOPinOutput {
 			registerProps.putAll(pinProps);
 		}
 		// Initial output state.
-		PinState initPinState = null;
+		PinState ips = null;
 		Boolean outputState = IGPIOPin.Util.getOutputState(registerProps);
 		// If it's already set, then we use it to get the initPinState
 		if (outputState != null) {
 			if (outputState.booleanValue())
-				initPinState = PinState.HIGH;
+				ips = PinState.HIGH;
 			else
-				initPinState = PinState.LOW;
+				ips = PinState.LOW;
 		} else {
 			// we set it to false/low
 			IGPIOPin.Util.setOutputState(registerProps, false);
-			initPinState = PinState.LOW;
+			ips = PinState.LOW;
 		}
+		final PinState initPinState = ips;
 		// pin name
-		String pinName = IGPIOPin.Util.getPinName(registerProps);
-		if (pinName == null) {
-			pinName = String.valueOf(pinId);
-			IGPIOPin.Util.setPinName(registerProps, pinName);
+		String pn = IGPIOPin.Util.getPinName(registerProps);
+		if (pn == null) {
+			pn = String.valueOf(pinId);
+			IGPIOPin.Util.setPinName(registerProps, pn);
 		}
-		// Using GPIOController, provision Pi4j digital output pin
-		GpioPinDigitalOutput pi4jPin = Activator.getGPIOController()
-				.provisionDigitalOutputPin(pin, pinName, initPinState);
+		final String pinName = pn;
 		// Now create new Pi4jGPIOPinOutput instance using pi4j pin provisioned,
 		// and register
 		return context.registerService(IGPIOPinOutput.class,
-				new Pi4jGPIOPinOutput(pi4jPin),
-				(Dictionary<String, Object>) registerProps);
+				new ServiceFactory<IGPIOPinOutput>() {
+					@Override
+					public IGPIOPinOutput getService(Bundle bundle,
+							ServiceRegistration<IGPIOPinOutput> registration) {
+						Pi4jGPIOPinOutput po = null;
+						synchronized (regToPinOutputMap) {
+							po = regToPinOutputMap.get(registration);
+							if (po == null) {
+								// Using GPIOController, provision Pi4j digital
+								// output pin
+								GpioPinDigitalOutput pi4jPin = Activator
+										.getGPIOController()
+										.provisionDigitalOutputPin(pin,
+												pinName, initPinState);
+								// Create pin output
+								po = new Pi4jGPIOPinOutput(pi4jPin);
+								regToPinOutputMap.put(registration, po);
+							}
+						}
+						return po;
+					}
+
+					@Override
+					public void ungetService(Bundle bundle,
+							ServiceRegistration<IGPIOPinOutput> registration,
+							IGPIOPinOutput service) {
+						synchronized (regToPinOutputMap) {
+							Pi4jGPIOPinOutput po = regToPinOutputMap
+									.get(registration);
+							if (po != null)
+								po.close();
+						}
+					}
+				}, (Dictionary<String, Object>) registerProps);
 	}
 
-	private final GpioPinDigitalOutput pinImpl;
+	private GpioPinDigitalOutput pinImpl;
 
 	public Pi4jGPIOPinOutput(GpioPinDigitalOutput pinImpl) {
 		this.pinImpl = pinImpl;
 	}
 
+	public int getPinId() {
+		if (this.pinImpl == null)
+			return -1;
+		return this.pinImpl.getPin().getAddress();
+	}
+
 	@Override
 	public boolean getState() {
+		if (this.pinImpl == null)
+			return false;
 		return (this.pinImpl.getState() == PinState.HIGH);
 	}
 
 	@Override
 	public void setState(boolean value) {
-		this.pinImpl.setState(value);
+		if (this.pinImpl != null)
+			this.pinImpl.setState(value);
 	}
 
 	@Override
 	public boolean toggle() {
+		if (this.pinImpl == null)
+			return false;
 		this.pinImpl.toggle();
 		return getState();
 	}
 
 	@Override
 	public void pulse(long duration, boolean pulseState) {
+		if (this.pinImpl == null)
+			return;
 		this.pinImpl.pulse(duration, pulseState);
 	}
 
 	@Override
 	public void blink(long delay, long duration, boolean blinkState) {
+		if (this.pinImpl == null)
+			return;
 		this.pinImpl.blink(delay, duration, blinkState ? PinState.HIGH
 				: PinState.LOW);
+	}
+
+	synchronized void close() {
+		if (this.pinImpl != null) {
+			Activator.getGPIOController().unprovisionPin(this.pinImpl);
+			this.pinImpl = null;
+		}
 	}
 
 }

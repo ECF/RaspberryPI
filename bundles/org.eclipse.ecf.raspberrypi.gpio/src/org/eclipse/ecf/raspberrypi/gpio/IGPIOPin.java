@@ -221,4 +221,6 @@ public interface IGPIOPin {
 		}
 
 	}
+	
+	public int getPinId();
 }

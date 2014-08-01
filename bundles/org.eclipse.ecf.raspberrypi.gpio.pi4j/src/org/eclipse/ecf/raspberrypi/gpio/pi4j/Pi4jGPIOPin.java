@@ -8,6 +8,12 @@
  ******************************************************************************/
 package org.eclipse.ecf.raspberrypi.gpio.pi4j;
 
+import java.util.Collection;
+
+import org.eclipse.ecf.internal.raspberrypi.gpio.pi4j.Activator;
+
+import com.pi4j.io.gpio.GpioController;
+import com.pi4j.io.gpio.GpioPin;
 import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.gpio.PinPullResistance;
 import com.pi4j.io.gpio.RaspiPin;
@@ -74,5 +80,16 @@ public class Pi4jGPIOPin {
 		default:
 			return null;
 		}
+	}
+
+	public static boolean isProvisioned(int pinId) {
+		GpioController gpio = Activator.getGPIOController();
+		if (gpio == null)
+			return false;
+		Collection<GpioPin> pins = gpio.getProvisionedPins();
+		for (GpioPin pin : pins)
+			if (pin.getPin().getAddress() == pinId)
+				return true;
+		return false;
 	}
 }
