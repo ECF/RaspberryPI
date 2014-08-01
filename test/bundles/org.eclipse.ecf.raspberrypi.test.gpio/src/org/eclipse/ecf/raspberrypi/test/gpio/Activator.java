@@ -1,5 +1,8 @@
 package org.eclipse.ecf.raspberrypi.test.gpio;
 
+import org.eclipse.ecf.raspberrypi.gpio.GPIOPinInputEvent;
+import org.eclipse.ecf.raspberrypi.gpio.IGPIOPin;
+import org.eclipse.ecf.raspberrypi.gpio.IGPIOPinInputListener;
 import org.eclipse.ecf.raspberrypi.gpio.IGPIOPinOutput;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
@@ -49,8 +52,19 @@ public class Activator implements BundleActivator {
 			}
 		});
 		pinTracker.open();
+		
+		// create and register IGPIOPinInputListener on IGPIOPin.DEFAULT_INPUT_PIN (2)
+		context.registerService(IGPIOPinInputListener.class,new TestGPIOPinInputListener(),IGPIOPin.Util.createInputListenerProps(IGPIOPin.DEFAULT_INPUT_PIN));
+		
 	}
 
+	class TestGPIOPinInputListener implements IGPIOPinInputListener {
+		@Override
+		public void handleInputEvent(GPIOPinInputEvent event) {
+			System.out.println("TestGPIOPinInputListener.handleInputEvent(event="+event+")");
+		}
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * @see org.osgi.framework.BundleActivator#stop(org.osgi.framework.BundleContext)

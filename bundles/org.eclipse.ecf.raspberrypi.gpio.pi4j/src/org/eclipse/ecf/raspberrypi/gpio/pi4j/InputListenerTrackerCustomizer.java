@@ -27,10 +27,24 @@ public class InputListenerTrackerCustomizer implements
 		ServiceTrackerCustomizer<IGPIOPinInputListener, IGPIOPinInputListener> {
 
 	private BundleContext context;
-	private Map<ServiceReference<IGPIOPinInputListener>, Pi4jGPIOPinInputListener> refToListenerMap = new HashMap<ServiceReference<IGPIOPinInputListener>, Pi4jGPIOPinInputListener>();
+	private Map<ServiceReference<IGPIOPinInputListener>, ListenerHolder> refToListenerMap = new HashMap<ServiceReference<IGPIOPinInputListener>, ListenerHolder>();
 
 	public InputListenerTrackerCustomizer(BundleContext context) {
 		this.context = context;
+	}
+
+	class ListenerHolder {
+		final GpioPinDigitalInput inputListener;
+		Pi4jGPIOPinInputListener listener;
+
+		public ListenerHolder(GpioPinDigitalInput inputListener) {
+			this.inputListener = inputListener;
+			setListener(listener);
+		}
+
+		public void setListener(Pi4jGPIOPinInputListener listener) {
+			this.listener = listener;
+		}
 	}
 
 	@Override
@@ -62,16 +76,25 @@ public class InputListenerTrackerCustomizer implements
 			if (pr == null)
 				pr = PinPullResistance.PULL_DOWN;
 			// Get controller GPIO
-			GpioController controller = Activator.getGPIOController();
-			if (controller != null) {
-				GpioPinDigitalInput inputListener = controller
-						.provisionDigitalInputPin(pin, pinName, pr);
-				// create new listener
-				Pi4jGPIOPinInputListener pi4jListener = new Pi4jGPIOPinInputListener(
+			synchronized (refToListenerMap) {
+				// Find reference
+				ListenerHolder listenerHolder = refToListenerMap.get(reference);
+				GpioPinDigitalInput inputListener = null;
+				// We've not seen this request before
+				if (listenerHolder == null) {
+					inputListener = Activator.getGPIOController()
+							.provisionDigitalInputPin(pin, pinName, pr);
+					listenerHolder = new ListenerHolder(inputListener);
+				} else
+					// We've seen it before so we use the old inputListener
+					inputListener = listenerHolder.inputListener;
+				// create new Pi4jGPIOPinInputListener
+				Pi4jGPIOPinInputListener listener = new Pi4jGPIOPinInputListener(
 						inputListener, gPIOInputListener);
-				synchronized (refToListenerMap) {
-					refToListenerMap.put(reference, pi4jListener);
-				}
+				// set on the listener holder
+				listenerHolder.setListener(listener);
+				// put into map
+				refToListenerMap.put(reference, listenerHolder);
 			}
 		} else {
 			System.err
@@ -92,9 +115,16 @@ public class InputListenerTrackerCustomizer implements
 			ServiceReference<IGPIOPinInputListener> reference,
 			IGPIOPinInputListener service) {
 		synchronized (refToListenerMap) {
-			Pi4jGPIOPinInputListener pi4j = refToListenerMap.remove(reference);
-			if (pi4j != null)
-				pi4j.close();
+			ListenerHolder listenerHolder = refToListenerMap.remove(reference);
+			if (listenerHolder != null) {
+				// Close our listener first
+				if (listenerHolder.listener != null)
+					listenerHolder.listener.close();
+				// Then unprovision the pin
+				if (listenerHolder.inputListener != null)
+					Activator.getGPIOController().unprovisionPin(
+							listenerHolder.inputListener);
+			}
 		}
 	}
 

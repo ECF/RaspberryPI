@@ -60,7 +60,7 @@ public interface IGPIOPin {
 		}
 
 		public static Integer convertPinId(String pinId) {
-			return Integer.getInteger(pinId);
+			return Integer.valueOf(pinId);
 		}
 
 		public static String convertOutputState(boolean state) {
@@ -68,11 +68,11 @@ public interface IGPIOPin {
 		}
 
 		public static Boolean convertOutputState(String state) {
-			return Boolean.getBoolean(state);
+			return Boolean.valueOf(state);
 		}
 
 		public static Integer convertInputPullResistance(String pullResistance) {
-			Integer pr = Integer.getInteger(pullResistance);
+			Integer pr = Integer.valueOf(pullResistance);
 			if (pr != null) {
 				int prVal = pr.intValue();
 				if (prVal < 0 || prVal > 2)

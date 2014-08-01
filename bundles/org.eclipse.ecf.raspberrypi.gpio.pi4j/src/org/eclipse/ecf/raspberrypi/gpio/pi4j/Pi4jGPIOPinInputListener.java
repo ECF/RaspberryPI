@@ -25,6 +25,9 @@ public class Pi4jGPIOPinInputListener implements IGPIOPinInputListener,
 			IGPIOPinInputListener listener) {
 		this.inputListener = inputListener;
 		this.listener = listener;
+		// Send notification of initial state
+		handleInputEvent(new GPIOPinInputEvent(this.inputListener.getPin()
+				.getAddress(), this.inputListener.getState().isHigh()));
 		this.inputListener.addListener(this);
 	}
 
