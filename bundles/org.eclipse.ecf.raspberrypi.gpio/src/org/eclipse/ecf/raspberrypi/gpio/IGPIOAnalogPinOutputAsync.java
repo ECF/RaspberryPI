@@ -8,18 +8,12 @@
  ******************************************************************************/
 package org.eclipse.ecf.raspberrypi.gpio;
 
-import java.io.Serializable;
+import java.util.concurrent.CompletableFuture;
 
-public abstract class AbstractGPIOPinEvent implements Serializable {
-	private static final long serialVersionUID = 6733232691622858769L;
+public interface IGPIOAnalogPinOutputAsync extends IGPIOPin {
 
-	private final int pinId;
+	public CompletableFuture<Long> getValueAsync();
 
-	public AbstractGPIOPinEvent(int pinId) {
-		this.pinId = pinId;
-	}
+	public CompletableFuture<Void> setValueAsync(long value);
 
-	public int getPinId() {
-		return pinId;
-	}
 }

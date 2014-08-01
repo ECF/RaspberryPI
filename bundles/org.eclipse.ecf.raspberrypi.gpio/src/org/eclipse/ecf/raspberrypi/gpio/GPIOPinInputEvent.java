@@ -10,12 +10,13 @@ package org.eclipse.ecf.raspberrypi.gpio;
 
 import java.io.Serializable;
 
-public class GPIOPinInputEvent extends AbstractGPIOPinEvent implements Serializable {
+public class GPIOPinInputEvent extends AbstractGPIOPinEvent implements
+		Serializable {
 
 	private static final long serialVersionUID = -6103636181685626657L;
 
 	private final boolean state;
-	
+
 	public GPIOPinInputEvent(int pinId, boolean state) {
 		super(pinId);
 		this.state = state;
@@ -24,4 +25,11 @@ public class GPIOPinInputEvent extends AbstractGPIOPinEvent implements Serializa
 	public boolean getState() {
 		return state;
 	}
+
+	@Override
+	public String toString() {
+		return "GPIOPinInputEvent [getPinId()=" + getPinId() + ", state="
+				+ state + "]";
+	}
+
 }

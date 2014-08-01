@@ -8,18 +8,8 @@
  ******************************************************************************/
 package org.eclipse.ecf.raspberrypi.gpio;
 
-import java.io.Serializable;
+public interface IGPIOAnalogPinInputListener {
 
-public abstract class AbstractGPIOPinEvent implements Serializable {
-	private static final long serialVersionUID = 6733232691622858769L;
+	void handleInputEvent(GPIOAnalogPinInputEvent event);
 
-	private final int pinId;
-
-	public AbstractGPIOPinEvent(int pinId) {
-		this.pinId = pinId;
-	}
-
-	public int getPinId() {
-		return pinId;
-	}
 }

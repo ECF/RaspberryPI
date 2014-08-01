@@ -11,12 +11,16 @@ package org.eclipse.ecf.raspberrypi.gpio;
 import java.util.concurrent.CompletableFuture;
 
 public interface IGPIOPinOutputAsync {
-	
-    public CompletableFuture<Boolean> getStateAsync();
-    public CompletableFuture<Void> setStateAsync(boolean value);
+
+	public CompletableFuture<Boolean> getStateAsync();
+
+	public CompletableFuture<Void> setStateAsync(boolean value);
+
 	public CompletableFuture<Boolean> toggleAsync();
-	
+
 	public CompletableFuture<Void> pulseAsync(long duration, boolean pulseState);
-	public CompletableFuture<Void> blinkAsync(long delay, long duration, boolean blinkeState);
-	
+
+	public CompletableFuture<Void> blinkAsync(long delay, long duration,
+			boolean blinkeState);
+
 }

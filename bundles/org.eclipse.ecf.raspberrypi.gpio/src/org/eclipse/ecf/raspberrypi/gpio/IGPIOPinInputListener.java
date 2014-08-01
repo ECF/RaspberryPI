@@ -11,5 +11,5 @@ package org.eclipse.ecf.raspberrypi.gpio;
 public interface IGPIOPinInputListener {
 
 	void handleInputEvent(GPIOPinInputEvent event);
-	
+
 }

@@ -10,16 +10,25 @@ package org.eclipse.ecf.raspberrypi.gpio;
 
 import java.io.Serializable;
 
-public abstract class AbstractGPIOPinEvent implements Serializable {
-	private static final long serialVersionUID = 6733232691622858769L;
+public class GPIOAnalogPinInputEvent extends AbstractGPIOPinEvent implements
+		Serializable {
 
-	private final int pinId;
+	private static final long serialVersionUID = 421080303440768006L;
+	private final long state;
 
-	public AbstractGPIOPinEvent(int pinId) {
-		this.pinId = pinId;
+	public GPIOAnalogPinInputEvent(int pinId, long state) {
+		super(pinId);
+		this.state = state;
 	}
 
-	public int getPinId() {
-		return pinId;
+	public long getState() {
+		return state;
 	}
+
+	@Override
+	public String toString() {
+		return "GPIOAnalogPinInputEvent [getPinId()=" + getPinId() + ", state="
+				+ state + "]";
+	}
+
 }
