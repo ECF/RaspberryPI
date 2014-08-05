@@ -50,7 +50,7 @@ public class Activator implements BundleActivator {
 		pinProps.put("service.exported.interfaces", "*");
 		pinProps.put("service.exported.configs", "ecf.generic.server");
 		pinProps.put("ecf.generic.server.port", "3288");
-		pinProps.put("ecf.generic.server.host",InetAddress.getLocalHost().getHostAddress());
+		pinProps.put("ecf.generic.server.hostname",InetAddress.getLocalHost().getHostAddress());
 		pinProps.put("ecf.exported.async.interfaces", "*");
 		Properties systemProps = System.getProperties();
 		for(Object pn: systemProps.keySet()) {
