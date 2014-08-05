@@ -8,10 +8,8 @@
  ******************************************************************************/
 package org.eclipse.ecf.internal.raspberrypi.gpio.pi4j;
 
-import org.eclipse.ecf.raspberrypi.gpio.IGPIOPin;
 import org.eclipse.ecf.raspberrypi.gpio.IGPIOPinInputListener;
 import org.eclipse.ecf.raspberrypi.gpio.pi4j.InputListenerTrackerCustomizer;
-import org.eclipse.ecf.raspberrypi.gpio.pi4j.Pi4jGPIOPinOutput;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.util.tracker.ServiceTracker;
@@ -32,8 +30,6 @@ public class Activator implements BundleActivator {
 		context = ctxt;
 		// create gpio controller
 		gpio = GpioFactory.getInstance();
-		// Testing: setup pinId 0 for digital output
-		Pi4jGPIOPinOutput.registerGPIOPinOutput(IGPIOPin.DEFAULT_OUTPUT_PIN);
 		this.inputListenerTrackerCustomizer = new InputListenerTrackerCustomizer(context);
 		// setup ServiceTracker for IGPIOPinInputListener whiteboard
 		// services

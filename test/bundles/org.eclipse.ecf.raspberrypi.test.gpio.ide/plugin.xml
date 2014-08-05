@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+   <extension
+         point="org.eclipse.ui.views">
+      <category
+            name="GPIO Pins"
+            id="org.eclipse.ecf.raspberrypi.test.gpio.ide">
+      </category>
+      <view
+            name="Raspberry PI GPIO Pin View"
+            icon="icons/high.gif"
+            category="org.eclipse.ecf.raspberrypi.test.gpio.ide"
+            class="org.eclipse.ecf.raspberrypi.internal.test.gpio.ide.views.RpiGPIOPinView"
+            id="org.eclipse.ecf.raspberrypi.test.gpio.ide.views.RpiGPIOPinView">
+      </view>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectiveExtensions">
+      <perspectiveExtension
+            targetID="org.eclipse.jdt.ui.JavaPerspective">
+         <view
+               ratio="0.5"
+               relative="org.eclipse.ui.views.ProblemView"
+               relationship="right"
+               id="org.eclipse.ecf.raspberrypi.test.gpio.ide.views.RpiGPIOPinView">
+         </view>
+      </perspectiveExtension>
+   </extension>
+
+</plugin>

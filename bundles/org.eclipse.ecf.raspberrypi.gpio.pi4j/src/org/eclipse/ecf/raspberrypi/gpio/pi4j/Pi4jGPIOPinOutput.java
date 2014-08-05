@@ -77,6 +77,11 @@ public class Pi4jGPIOPinOutput extends Pi4jGPIOPin implements IGPIOPinOutput {
 		}
 		final String pinName = pn;
 
+		// pin id
+		Integer pId = IGPIOPin.Util.getPinId(registerProps);
+		if (pId == null)
+			IGPIOPin.Util.setPinId(registerProps, pinId);
+		
 		// We only provision a pin once
 		if (isProvisioned(pinId))
 			throw new IllegalArgumentException(

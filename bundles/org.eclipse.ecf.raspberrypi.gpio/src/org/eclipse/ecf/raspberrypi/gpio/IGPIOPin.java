@@ -98,6 +98,8 @@ public interface IGPIOPin {
 		private static Integer getPinId(Object o) {
 			if (o instanceof String)
 				return convertPinId((String) o);
+			if (o instanceof Integer) 
+				return (Integer) o;
 			return null;
 		}
 
@@ -116,6 +118,8 @@ public interface IGPIOPin {
 		private static String getPinName(Object o) {
 			if (o instanceof String)
 				return (String) o;
+			if (o instanceof Integer)
+				return ((Integer) o).toString();
 			return null;
 		}
 

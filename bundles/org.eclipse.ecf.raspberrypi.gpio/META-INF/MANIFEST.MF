@@ -7,3 +7,4 @@ Bundle-Vendor: Eclipse.org - ECF
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: org.eclipse.ecf.raspberrypi.gpio;version="1.0.0"
 Import-Package: org.osgi.framework
+Bundle-ActivationPolicy: lazy
