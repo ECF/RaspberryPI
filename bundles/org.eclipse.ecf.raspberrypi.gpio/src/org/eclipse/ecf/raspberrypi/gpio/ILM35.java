@@ -8,27 +8,19 @@
  ******************************************************************************/
 package org.eclipse.ecf.raspberrypi.gpio;
 
-import java.util.concurrent.CompletableFuture;
-
 /**
- * An async version of {@link IGenericPi}.
+ * LM35 is a temperature measurement device.
  * 
  * @author Wim Jongman
- * @see IGenericPi
  *
  */
-public interface IGenericPiAsync {
+public interface ILM35 {
 
 	/**
+	 * Temperature changed on the specified host.
+	 * 
 	 * @param data
-	 * @see IGenericPi#setData(Object)
 	 */
-	public CompletableFuture<Void> setDataAsync(Object data);
-
-	/**
-	 * @return data
-	 * @see IGenericPi#getData(Object)
-	 */
-	public CompletableFuture<Object> getDataAsync();
+	public void setTemperature(String pHost, double pTemperature);
 
 }

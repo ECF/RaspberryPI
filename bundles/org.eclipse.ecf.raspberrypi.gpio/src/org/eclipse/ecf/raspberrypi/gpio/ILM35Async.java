@@ -8,27 +8,22 @@
  ******************************************************************************/
 package org.eclipse.ecf.raspberrypi.gpio;
 
+import java.util.concurrent.CompletableFuture;
+
 /**
- * A generic data swapper. You set up a service with this class under a specific
- * service property agreed with the remote.
+ * LM35 is a temperature measurement device.
  * 
  * @author Wim Jongman
+ * @see ILM35
  *
  */
-public interface IGenericPi {
+public interface ILM35Async {
 
 	/**
-	 * Sets data that the other end can understand.
+	 * Temperature changed on the specified host.
 	 * 
 	 * @param data
 	 */
-	public void setData(Object data);
-
-	/**
-	 * Gets data from the other end that you understand.
-	 * 
-	 * @return data
-	 */
-	public Object getData();
+	public CompletableFuture<Void> setTemperatureAsync(String pHost, double pTemperature);
 
 }
