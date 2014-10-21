@@ -8,7 +8,7 @@
     <relativePath>../../../releng/org.eclipse.ecf.raspberrypi.gpio.parent</relativePath>
   	<groupId>gpio</groupId>
   </parent>
-  <artifactId>org.eclipse.ecf.raspberrypi.test.gpio</artifactId>
+  <artifactId>org.eclipse.ecf.raspberrypi.gpio.pin1</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <packaging>eclipse-plugin</packaging>
   <groupId>gpio</groupId>

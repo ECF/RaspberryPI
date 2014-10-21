@@ -6,7 +6,7 @@
  * 
  * Contributors: Scott Lewis - initial API and implementation
  ******************************************************************************/
-package org.eclipse.ecf.raspberrypi.test.gpio;
+package org.eclipse.ecf.raspberrypi.gpio.pin1;
 
 import java.net.InetAddress;
 import java.util.HashMap;
@@ -35,7 +35,6 @@ public class Activator implements BundleActivator {
 
 	private ServiceTracker<IGPIOPinOutput, IGPIOPinOutput> pinTracker;
 	private ServiceRegistration<IGPIOPinOutput> regPin0;
-	private ServiceRegistration<IGPIOPinOutput> regPin1;
 
 	/*
 	 * (non-Javadoc)
@@ -51,18 +50,18 @@ public class Activator implements BundleActivator {
 		pinProps.put("service.exported.interfaces", "*");
 		pinProps.put("service.exported.configs", "ecf.generic.server");
 		pinProps.put("ecf.generic.server.port", "3288");
-		pinProps.put("ecf.generic.server.hostname",InetAddress.getLocalHost().getHostAddress());
+		pinProps.put("ecf.generic.server.hostname", InetAddress.getLocalHost()
+				.getHostAddress());
 		pinProps.put("ecf.exported.async.interfaces", "*");
 		Properties systemProps = System.getProperties();
-		for(Object pn: systemProps.keySet()) {
+		for (Object pn : systemProps.keySet()) {
 			String propName = (String) pn;
-			if (propName.startsWith("service.") || propName.startsWith("ecf.")) 
-				pinProps.put(propName,systemProps.get(propName));
+			if (propName.startsWith("service.") || propName.startsWith("ecf."))
+				pinProps.put(propName, systemProps.get(propName));
 		}
 
 		// register GPIOPin 0 with the above export properties
 		regPin0 = Pi4jGPIOPinOutput.registerGPIOPinOutput(0, pinProps, context);
-		regPin1 = Pi4jGPIOPinOutput.registerGPIOPinOutput(1, pinProps, context);
 
 		// Create tracker to print out information from registration above
 		pinTracker = new ServiceTracker<IGPIOPinOutput, IGPIOPinOutput>(
@@ -133,10 +132,6 @@ public class Activator implements BundleActivator {
 		if (regPin0 != null) {
 			regPin0.unregister();
 			regPin0 = null;
-		}
-		if (regPin1 != null) {
-			regPin1.unregister();
-			regPin1 = null;
 		}
 	}
 
