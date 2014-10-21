@@ -81,7 +81,7 @@ public class Pi4jGPIOPinOutput extends Pi4jGPIOPin implements IGPIOPinOutput {
 		Integer pId = IGPIOPin.Util.getPinId(registerProps);
 		if (pId == null)
 			IGPIOPin.Util.setPinId(registerProps, pinId);
-		
+
 		// We only provision a pin once
 		if (isProvisioned(pinId))
 			throw new IllegalArgumentException(
@@ -104,6 +104,9 @@ public class Pi4jGPIOPinOutput extends Pi4jGPIOPin implements IGPIOPinOutput {
 					public void ungetService(Bundle bundle,
 							ServiceRegistration<IGPIOPinOutput> registration,
 							IGPIOPinOutput service) {
+						System.out.println("Unprovisioning pin");
+						Activator.getGPIOController().unprovisionPin(
+								((Pi4jGPIOPinOutput) service).pinImpl);
 					}
 				}, (Dictionary<String, Object>) registerProps);
 	}

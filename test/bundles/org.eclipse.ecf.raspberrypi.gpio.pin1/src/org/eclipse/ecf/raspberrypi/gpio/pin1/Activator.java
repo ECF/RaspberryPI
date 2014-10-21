@@ -14,7 +14,6 @@ import java.util.Map;
 import java.util.Properties;
 
 import org.eclipse.ecf.raspberrypi.gpio.GPIOPinInputEvent;
-import org.eclipse.ecf.raspberrypi.gpio.IGPIOPin;
 import org.eclipse.ecf.raspberrypi.gpio.IGPIOPinInputListener;
 import org.eclipse.ecf.raspberrypi.gpio.IGPIOPinOutput;
 import org.eclipse.ecf.raspberrypi.gpio.pi4j.Pi4jGPIOPinOutput;
@@ -126,5 +125,4 @@ public class Activator implements BundleActivator {
 			regPin1 = null;
 		}
 	}
-
 }
