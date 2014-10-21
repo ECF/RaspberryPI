@@ -8,20 +8,10 @@
  ******************************************************************************/
 package org.eclipse.ecf.raspberrypi.gpio.pi4j.adc;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.eclipse.ecf.internal.raspberrypi.gpio.pi4j.adc.Activator;
-import org.eclipse.ecf.raspberrypi.gpio.IGPIOPin;
-import org.eclipse.ecf.raspberrypi.gpio.IGPIOPinInputListener;
 import org.eclipse.ecf.raspberrypi.gpio.IGenericPi;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 import org.osgi.util.tracker.ServiceTrackerCustomizer;
-
-import com.pi4j.io.gpio.GpioPinDigitalInput;
-import com.pi4j.io.gpio.Pin;
-import com.pi4j.io.gpio.PinPullResistance;
 
 public class GenericPiTrackerCustomizer implements
 		ServiceTrackerCustomizer<IGenericPi, IGenericPi> {
@@ -34,8 +24,8 @@ public class GenericPiTrackerCustomizer implements
 
 	@Override
 	public IGenericPi addingService(ServiceReference<IGenericPi> reference) {
-
-		return null;
+		System.out.println("Service found.");
+		return context.getService(reference);
 	}
 
 	@Override

@@ -10,53 +10,47 @@ package org.eclipse.ecf.internal.raspberrypi.gpio.pi4j.adc;
 
 import org.eclipse.ecf.raspberrypi.gpio.IGenericPi;
 import org.eclipse.ecf.raspberrypi.gpio.pi4j.adc.GenericPiTrackerCustomizer;
+import org.eclipse.ecf.raspberrypi.gpio.pi4j.adc.MCP3008;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.util.tracker.ServiceTracker;
 
 import com.pi4j.io.gpio.GpioController;
-import com.pi4j.io.gpio.GpioFactory;
 
 public class Activator implements BundleActivator {
 
 	private static BundleContext context;
 	private static GpioController gpio;
 
-	private ServiceTracker<IGenericPi, IGenericPi> inputListenerTracker;
+	private ServiceTracker<IGenericPi, IGenericPi> serviceTracker;
 	private GenericPiTrackerCustomizer genericPiTrackerCustomizer;
+	private MCP3008 fMCP3008;
 
 	@Override
 	public void start(BundleContext ctxt) throws Exception {
+
 		context = ctxt;
-		// create gpio controller
-		gpio = GpioFactory.getInstance();
+		
+		fMCP3008 = new MCP3008().init();
+		fMCP3008.startService(ctxt);
+
 		this.genericPiTrackerCustomizer = new GenericPiTrackerCustomizer(
 				context);
 		// setup ServiceTracker for IGPIOPinInputListener whiteboard
 		// services
-		inputListenerTracker = new ServiceTracker<IGenericPi, IGenericPi>(
-				context, IGenericPi.class, genericPiTrackerCustomizer);
-		inputListenerTracker.open();
-	}
-
-	public static GpioController getGPIOController() {
-		return gpio;
-	}
-
-	public static BundleContext getContext() {
-		return context;
+		serviceTracker = new ServiceTracker<IGenericPi, IGenericPi>(context,
+				IGenericPi.class, genericPiTrackerCustomizer);
+		serviceTracker.open();
 	}
 
 	@Override
 	public void stop(BundleContext context) throws Exception {
-		if (inputListenerTracker != null) {
-			inputListenerTracker.close();
-			inputListenerTracker = null;
-		}
-		if (genericPiTrackerCustomizer != null) {
-			genericPiTrackerCustomizer.close();
-			genericPiTrackerCustomizer = null;
-		}
+		fMCP3008.stopService();
+		fMCP3008 = null;
+		serviceTracker.close();
+		serviceTracker = null;
+		genericPiTrackerCustomizer.close();
+		genericPiTrackerCustomizer = null;
 		context = null;
 	}
 }
