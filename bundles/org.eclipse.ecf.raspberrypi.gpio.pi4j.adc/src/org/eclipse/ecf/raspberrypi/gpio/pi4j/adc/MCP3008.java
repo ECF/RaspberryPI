@@ -3,7 +3,6 @@ package org.eclipse.ecf.raspberrypi.gpio.pi4j.adc;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.Calendar;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -30,6 +29,9 @@ import com.pi4j.io.gpio.RaspiPin;
  */
 public class MCP3008 {
 
+	private static final int LM35_POLLING_INTERVAL_MS = 100;
+	private double fCurrentTemp = 0;
+
 	public class LM35TrackerCustomizer implements
 			ServiceTrackerCustomizer<ILM35, ILM35> {
 
@@ -42,7 +44,9 @@ public class MCP3008 {
 		@Override
 		public ILM35 addingService(ServiceReference<ILM35> reference) {
 			System.out.println("LM35 client found.");
-			return context.getService(reference);
+			ILM35 service = context.getService(reference);
+			service.setTemperature(getHostName(), getCurrentTemp());
+			return service;
 		}
 
 		@Override
@@ -53,6 +57,7 @@ public class MCP3008 {
 		@Override
 		public void removedService(ServiceReference<ILM35> reference,
 				ILM35 service) {
+			System.out.println("LM35 client found.");
 		}
 
 		public void close() {
@@ -61,29 +66,39 @@ public class MCP3008 {
 
 	TimerTask fTask = new TimerTask() {
 
+		int tolerance = 5;
+		int lastRead = 0;
+		boolean run = true;
+
 		@Override
 		public void run() {
-			int lastRead = 0;
-			int tolerance = 5;
-			int adc = readAdc();
-			int postAdjust = Math.abs(adc - lastRead);
-			if (postAdjust > tolerance) {
-				int volume = (int) (adc / 10.23); // [0, 1023] ~ [0x0000,
-													// 0x03FF] ~ [0&0,
-													// 0&1111111111]
-				double volts = (adc * 3.3) / 1024;
-				double temperature = volts / (10.0 / 1000);
-				System.out.println("Volume:" + volume + "%  Temp:"
-						+ temperature + "C");
-				lastRead = adc;
-				notifyLM35Services(temperature);
-			}
-			try {
-				Thread.sleep(500);
-			} catch (InterruptedException ie) {
-				ie.printStackTrace();
+
+			while (run) {
+				int adc = readAdc();
+				int postAdjust = Math.abs(adc - lastRead);
+				if (postAdjust > tolerance) {
+					int volume = (int) (adc / 10.23); // [0, 1023] ~ [0x0000,
+														// 0x03FF] ~ [0&0,
+														// 0&1111111111]
+					double volts = (adc * 3.3) / 1024;
+					double temperature = volts / (10.0 / 1000);
+					System.out.println("\r\rVolume:" + volume + "%  Temp:"
+							+ temperature + "C");
+					lastRead = adc;
+					setCurrentTemp(temperature);
+					notifyLM35Services(temperature);
+				}
+				try {
+					Thread.sleep(LM35_POLLING_INTERVAL_MS);
+				} catch (InterruptedException e) {
+				}
 			}
 		}
+
+		public boolean cancel() {
+			run = false;
+			return false;
+		};
 	};
 
 	private final static boolean DISPLAY_DIGIT = false;
@@ -108,6 +123,8 @@ public class MCP3008 {
 
 	private ServiceTracker<ILM35, ILM35> fTracker;
 
+	private Timer fTimer;
+
 	/**
 	 * Creates the converter with default values.
 	 */
@@ -115,7 +132,9 @@ public class MCP3008 {
 	}
 
 	protected void notifyLM35Services(double temperature) {
+
 		ILM35[] services = fTracker.getServices(new ILM35[0]);
+		System.out.println("Notyfing " + services.length + " services.");
 		for (ILM35 service : services) {
 			((ILM35Async) service).setTemperatureAsync(getHostName(),
 					temperature); // do not wait for result.
@@ -144,7 +163,7 @@ public class MCP3008 {
 		this.ADC_CHANNEL = pChannel;
 	}
 
-	public MCP3008 init() {
+	private MCP3008 init() {
 		GpioController gpio = GpioFactory.getInstance();
 		mosiOutput = gpio.provisionDigitalOutputPin(spiMosi, "MOSI",
 				PinState.LOW);
@@ -243,7 +262,27 @@ public class MCP3008 {
 		init();
 		fTracker = new ServiceTracker<>(ctxt, ILM35.class,
 				new LM35TrackerCustomizer(ctxt));
-		Timer fTimer = new Timer("MCP3008 Polling Thread", true);
-		fTimer.scheduleAtFixedRate(fTask, Calendar.getInstance().getTime(), 500);
+		fTracker.open();
+		fTimer = new Timer("MCP3008 Polling Thread", true);
+		fTimer.schedule(fTask, 5000);
+	}
+
+	/**
+	 * Stops monitoring the ADC and closes all trackers.
+	 * 
+	 * @param ctxt
+	 */
+	public void stop(BundleContext ctxt) {
+		fTracker.close();
+		fTimer.cancel();
+		fTimer.purge();
+	}
+
+	private void setCurrentTemp(double pTemp) {
+		fCurrentTemp = pTemp;
+	}
+
+	public double getCurrentTemp() {
+		return fCurrentTemp;
 	}
 }

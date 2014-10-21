@@ -34,7 +34,8 @@ public class Activator implements BundleActivator {
 	}
 
 	private ServiceTracker<IGPIOPinOutput, IGPIOPinOutput> pinTracker;
-	private ServiceRegistration<IGPIOPinOutput> reg;
+	private ServiceRegistration<IGPIOPinOutput> regPin0;
+	private ServiceRegistration<IGPIOPinOutput> regPin1;
 
 	/*
 	 * (non-Javadoc)
@@ -60,7 +61,8 @@ public class Activator implements BundleActivator {
 		}
 
 		// register GPIOPin 0 with the above export properties
-		reg = Pi4jGPIOPinOutput.registerGPIOPinOutput(0, pinProps, context);
+		regPin0 = Pi4jGPIOPinOutput.registerGPIOPinOutput(0, pinProps, context);
+		regPin1 = Pi4jGPIOPinOutput.registerGPIOPinOutput(1, pinProps, context);
 
 		// Create tracker to print out information from registration above
 		pinTracker = new ServiceTracker<IGPIOPinOutput, IGPIOPinOutput>(
@@ -77,7 +79,7 @@ public class Activator implements BundleActivator {
 						System.out.println("  current pin state is "
 								+ (pin.getState() ? "HIGH" : "LOW"));
 						System.out.println("  setting state to HIGH");
-						pin.setState(true);
+					//	pin.setState(true);
 						return pin;
 					}
 
@@ -90,12 +92,12 @@ public class Activator implements BundleActivator {
 					@Override
 					public void removedService(
 							ServiceReference<IGPIOPinOutput> reference,
-							IGPIOPinOutput service) {
+							IGPIOPinOutput pin) {
 						System.out.println("Removing GPIO Pin service. id="
 								+ reference
 										.getProperty(IGPIOPinOutput.PIN_ID_PROP));
 						System.out.println("  setting state to LOW");
-						service.setState(false);
+						pin.setState(false);
 					}
 				});
 		pinTracker.open();
@@ -128,9 +130,13 @@ public class Activator implements BundleActivator {
 			pinTracker.close();
 			pinTracker = null;
 		}
-		if (reg != null) {
-			reg.unregister();
-			reg = null;
+		if (regPin0 != null) {
+			regPin0.unregister();
+			regPin0 = null;
+		}
+		if (regPin1 != null) {
+			regPin1.unregister();
+			regPin1 = null;
 		}
 	}
 

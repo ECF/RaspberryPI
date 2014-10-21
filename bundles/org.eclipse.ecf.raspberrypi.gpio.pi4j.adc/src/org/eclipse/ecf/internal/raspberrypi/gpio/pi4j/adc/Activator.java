@@ -14,23 +14,20 @@ import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.util.tracker.ServiceTracker;
 
-import com.pi4j.io.gpio.GpioController;
-
 public class Activator implements BundleActivator {
-
-	private static GpioController gpio;
 
 	private ServiceTracker<ILM35, ILM35> serviceTracker;
 	private MCP3008 fMCP3008;
 
 	@Override
 	public void start(BundleContext ctxt) throws Exception {
-		fMCP3008 = new MCP3008().init();
+		fMCP3008 = new MCP3008();
 		fMCP3008.start(ctxt);
 	}
 
 	@Override
 	public void stop(BundleContext context) throws Exception {
+		fMCP3008.stop(context);
 		fMCP3008 = null;
 		serviceTracker.close();
 		serviceTracker = null;
