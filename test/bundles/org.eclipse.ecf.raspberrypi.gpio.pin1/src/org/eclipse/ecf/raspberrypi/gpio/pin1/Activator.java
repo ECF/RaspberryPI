@@ -99,13 +99,6 @@ public class Activator implements BundleActivator {
 					}
 				});
 		pinTracker.open();
-
-		// create and register IGPIOPinInputListener on
-		// IGPIOPin.DEFAULT_INPUT_PIN (2)
-		context.registerService(IGPIOPinInputListener.class,
-				new TestGPIOPinInputListener(), IGPIOPin.Util
-						.createInputListenerProps(IGPIOPin.DEFAULT_INPUT_PIN));
-
 	}
 
 	class TestGPIOPinInputListener implements IGPIOPinInputListener {
