@@ -163,7 +163,7 @@ public class MCP3008 {
 		this.ADC_CHANNEL = pChannel;
 	}
 
-	private MCP3008 init() {
+	private MCP3008 provionsPins() {
 		GpioController gpio = GpioFactory.getInstance();
 		mosiOutput = gpio.provisionDigitalOutputPin(spiMosi, "MOSI",
 				PinState.LOW);
@@ -173,6 +173,14 @@ public class MCP3008 {
 				PinState.LOW);
 		misoInput = gpio.provisionDigitalInputPin(spiMiso, "MISO");
 		return this;
+	}
+
+	private void unprovisionPins() {
+		GpioController gpio = GpioFactory.getInstance();
+		gpio.unprovisionPin(mosiOutput);
+		gpio.unprovisionPin(clockOutput);
+		gpio.unprovisionPin(chipSelectOutput);
+		gpio.unprovisionPin(misoInput);
 	}
 
 	/**
@@ -259,7 +267,7 @@ public class MCP3008 {
 	 * @param ctxt
 	 */
 	public void start(BundleContext ctxt) {
-		init();
+		provionsPins();
 		fTracker = new ServiceTracker<>(ctxt, ILM35.class,
 				new LM35TrackerCustomizer(ctxt));
 		fTracker.open();
@@ -276,6 +284,7 @@ public class MCP3008 {
 		fTracker.close();
 		fTimer.cancel();
 		fTimer.purge();
+		unprovisionPins();
 	}
 
 	private void setCurrentTemp(double pTemp) {
