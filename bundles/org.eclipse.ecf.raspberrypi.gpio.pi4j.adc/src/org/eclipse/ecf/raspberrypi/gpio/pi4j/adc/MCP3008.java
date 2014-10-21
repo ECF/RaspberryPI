@@ -107,7 +107,7 @@ public class MCP3008 {
 	// 23: DOUT on the ADC is IN on the GPIO. ADC:Slave, GPIO:Master
 	// 24: DIN on the ADC, OUT on the GPIO. Same reason as above.
 	// SPI: Serial Peripheral Interface
-	private Pin spiClk = RaspiPin.GPIO_01; // Pin #18, clock
+	private Pin spiClk = RaspiPin.GPIO_03; // Pin #15, clock
 	private Pin spiMiso = RaspiPin.GPIO_04; // Pin #23, data in. MISO: Master In
 											// Slave Out
 	private Pin spiMosi = RaspiPin.GPIO_05; // Pin #24, data out. MOSI: Master

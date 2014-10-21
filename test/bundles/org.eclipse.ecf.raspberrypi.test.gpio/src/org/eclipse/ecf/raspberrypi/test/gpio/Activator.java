@@ -79,7 +79,7 @@ public class Activator implements BundleActivator {
 						System.out.println("  current pin state is "
 								+ (pin.getState() ? "HIGH" : "LOW"));
 						System.out.println("  setting state to HIGH");
-					//	pin.setState(true);
+						pin.setState(true);
 						return pin;
 					}
 
