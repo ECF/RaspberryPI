@@ -3,13 +3,16 @@ package org.eclipse.ecf.raspberrypi.gpio.pi4j.adc;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.Dictionary;
-import java.util.Hashtable;
-import java.util.Properties;
+import java.util.Calendar;
+import java.util.Timer;
+import java.util.TimerTask;
 
-import org.eclipse.ecf.raspberrypi.gpio.IGenericPi;
+import org.eclipse.ecf.raspberrypi.gpio.ILM35;
+import org.eclipse.ecf.raspberrypi.gpio.ILM35Async;
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.ServiceRegistration;
+import org.osgi.framework.ServiceReference;
+import org.osgi.util.tracker.ServiceTracker;
+import org.osgi.util.tracker.ServiceTrackerCustomizer;
 
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
@@ -26,6 +29,63 @@ import com.pi4j.io.gpio.RaspiPin;
  *
  */
 public class MCP3008 {
+
+	public class LM35TrackerCustomizer implements
+			ServiceTrackerCustomizer<ILM35, ILM35> {
+
+		private BundleContext context;
+
+		public LM35TrackerCustomizer(BundleContext context) {
+			this.context = context;
+		}
+
+		@Override
+		public ILM35 addingService(ServiceReference<ILM35> reference) {
+			System.out.println("LM35 client found.");
+			return context.getService(reference);
+		}
+
+		@Override
+		public void modifiedService(ServiceReference<ILM35> pReference,
+				ILM35 pService) {
+		}
+
+		@Override
+		public void removedService(ServiceReference<ILM35> reference,
+				ILM35 service) {
+		}
+
+		public void close() {
+		}
+	}
+
+	TimerTask fTask = new TimerTask() {
+
+		@Override
+		public void run() {
+			int lastRead = 0;
+			int tolerance = 5;
+			int adc = readAdc();
+			int postAdjust = Math.abs(adc - lastRead);
+			if (postAdjust > tolerance) {
+				int volume = (int) (adc / 10.23); // [0, 1023] ~ [0x0000,
+													// 0x03FF] ~ [0&0,
+													// 0&1111111111]
+				double volts = (adc * 3.3) / 1024;
+				double temperature = volts / (10.0 / 1000);
+				System.out.println("Volume:" + volume + "%  Temp:"
+						+ temperature + "C");
+				lastRead = adc;
+				notifyLM35Services(temperature);
+			}
+			try {
+				Thread.sleep(500);
+			} catch (InterruptedException ie) {
+				ie.printStackTrace();
+			}
+		}
+	};
+
 	private final static boolean DISPLAY_DIGIT = false;
 
 	// Note: "Mismatch" 23-24. The wiring says DOUT->#23, DIN->#24
@@ -46,12 +106,33 @@ public class MCP3008 {
 	private GpioPinDigitalOutput clockOutput = null;
 	private GpioPinDigitalOutput chipSelectOutput = null;
 
-	private ServiceRegistration<IGenericPi> fServiceRegistration;
+	private ServiceTracker<ILM35, ILM35> fTracker;
 
 	/**
 	 * Creates the converter with default values.
 	 */
 	public MCP3008() {
+	}
+
+	protected void notifyLM35Services(double temperature) {
+		ILM35[] services = fTracker.getServices(new ILM35[0]);
+		for (ILM35 service : services) {
+			((ILM35Async) service).setTemperatureAsync(getHostName(),
+					temperature); // do not wait for result.
+		}
+	}
+
+	private String getHostName() {
+		String hostName = System.getProperties().getProperty(
+				"ecf.generic.server.hostname");
+		if (hostName == null) {
+			try {
+				hostName = InetAddress.getLocalHost().getHostName();
+			} catch (UnknownHostException e) {
+				return "unknown host";
+			}
+		}
+		return hostName;
 	}
 
 	public MCP3008(Pin pSpiClk, Pin pSpiMiso, Pin pSpiMosi, Pin pSpiCs,
@@ -152,39 +233,17 @@ public class MCP3008 {
 		return adcOut;
 	}
 
-	public void startService(BundleContext context) {
-		Dictionary<String, Object> props = createProperties();
-		registerService(context, props);
-	}
-	
-	public void stopService() {
-		fServiceRegistration.unregister();
-	}
-
-	private void registerService(BundleContext context,
-			Dictionary<String, Object> props) {
-		fServiceRegistration = context.registerService(IGenericPi.class,
-				new MCP3008Service(this), props);
-	}
-
-	private Dictionary<String, Object> createProperties() {
-		// Setup properties for export using the ecf generic server
-		Dictionary<String, Object> props = new Hashtable<String, Object>();
-		props.put("service.exported.interfaces", "*");
-		props.put("service.exported.configs", "ecf.generic.server");
-		props.put("ecf.generic.server.port", "3288");
-		try {
-			props.put("ecf.generic.server.hostname", InetAddress.getLocalHost()
-					.getHostAddress());
-		} catch (UnknownHostException e) {
-		}
-		props.put("ecf.exported.async.interfaces", "*");
-		Properties systemProps = System.getProperties();
-		for (Object pn : systemProps.keySet()) {
-			String propName = (String) pn;
-			if (propName.startsWith("service.") || propName.startsWith("ecf."))
-				props.put(propName, systemProps.get(propName));
-		}
-		return props;
+	/**
+	 * Initializes the board and sets up a tracker to monitor for ILM35 remote
+	 * services.
+	 * 
+	 * @param ctxt
+	 */
+	public void start(BundleContext ctxt) {
+		init();
+		fTracker = new ServiceTracker<>(ctxt, ILM35.class,
+				new LM35TrackerCustomizer(ctxt));
+		Timer fTimer = new Timer("MCP3008 Polling Thread", true);
+		fTimer.scheduleAtFixedRate(fTask, Calendar.getInstance().getTime(), 500);
 	}
 }
