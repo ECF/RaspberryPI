@@ -123,7 +123,7 @@
 		<module>../../bundles/org.eclipse.ecf.raspberrypi.gpio</module>
 		<module>../../test/bundles/org.eclipse.ecf.raspberrypi.test.gpio</module>
 		<module>../../bundles/org.eclipse.ecf.raspberrypi.gpio.pi4j</module>
-		<module>../../bundles/org.eclipse.ecf.raspberrypi.pi4j.gpio.adc</module>
+		<module>../../bundles/org.eclipse.ecf.raspberrypi.gpio.pi4j.adc</module>
 		<module>../../releng/org.eclipse.ecf.raspberrypi.gpio.site</module>
 		<module>../../bundles/com.pi4j</module>
 
