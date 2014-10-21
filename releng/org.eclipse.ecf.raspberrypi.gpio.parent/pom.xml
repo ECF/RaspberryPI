@@ -121,9 +121,9 @@
 		<module>../../features/org.eclipse.ecf.raspberrypi.gpio.pi4j.feature</module>
 		<module>../../features/org.eclipse.ecf.raspberrypi.gpio.feature</module>
 		<module>../../bundles/org.eclipse.ecf.raspberrypi.gpio</module>
-		<module>../../bundles/org.eclipse.ecf.raspberrypi.gpio.adc</module>
 		<module>../../test/bundles/org.eclipse.ecf.raspberrypi.test.gpio</module>
 		<module>../../bundles/org.eclipse.ecf.raspberrypi.gpio.pi4j</module>
+		<module>../../bundles/org.eclipse.ecf.raspberrypi.pi4j.gpio.adc</module>
 		<module>../../releng/org.eclipse.ecf.raspberrypi.gpio.site</module>
 		<module>../../bundles/com.pi4j</module>
 
