@@ -29,8 +29,6 @@ public class Activator implements BundleActivator {
 	public void stop(BundleContext context) throws Exception {
 		fMCP3008.stop(context);
 		fMCP3008 = null;
-		serviceTracker.close();
-		serviceTracker = null;
 		context = null;
 	}
 }

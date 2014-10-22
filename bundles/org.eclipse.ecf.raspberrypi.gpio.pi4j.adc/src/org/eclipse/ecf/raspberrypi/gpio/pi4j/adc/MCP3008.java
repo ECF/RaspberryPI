@@ -282,6 +282,7 @@ public class MCP3008 {
 	 */
 	public void stop(BundleContext ctxt) {
 		fTracker.close();
+		fTask.cancel();
 		fTimer.cancel();
 		fTimer.purge();
 		unprovisionPins();
