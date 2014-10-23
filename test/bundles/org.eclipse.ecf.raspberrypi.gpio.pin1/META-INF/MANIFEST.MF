@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: ECF GPIO Test Consumer
-Bundle-SymbolicName: org.eclipse.ecf.raspberrypi.gpio.pin0
+Bundle-SymbolicName: org.eclipse.ecf.raspberrypi.gpio.pin1
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.eclipse.ecf.raspberrypi.gpio.pin0.Activator
 Bundle-Vendor: Eclipse.org - ECF
