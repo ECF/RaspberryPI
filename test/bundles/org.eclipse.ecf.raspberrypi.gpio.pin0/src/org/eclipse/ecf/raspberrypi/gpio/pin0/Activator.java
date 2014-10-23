@@ -41,7 +41,8 @@ public class Activator implements BundleActivator {
 	@Override
 	public void start(BundleContext bundleContext) throws Exception {
 		Activator.context = bundleContext;
-		setupService();
+		registerPin(0);
+		registerTracker();
 		setupInputListener();
 	}
 
@@ -54,16 +55,6 @@ public class Activator implements BundleActivator {
 		context.registerService(IGPIOPinInputListener.class,
 				new TestGPIOPinInputListener(), IGPIOPin.Util
 						.createInputListenerProps(IGPIOPin.DEFAULT_INPUT_PIN));
-	}
-
-	/**
-	 * Registers a service and starts tracking the pin.
-	 * 
-	 * @throws UnknownHostException
-	 */
-	protected void setupService() {
-		registerPin();
-		registerTracker();
 	}
 
 	private void registerTracker() {
@@ -106,10 +97,16 @@ public class Activator implements BundleActivator {
 		pinTracker.open();
 	}
 
-	public void registerPin() {
+	/**
+	 * Registers the pin.
+	 * 
+	 * @param pPin
+	 */
+	protected void registerPin(int pPin) {
 		Map<String, Object> pinProps = getDefaultPinProps();
-		setPin(Pi4jGPIOPinOutput.registerGPIOPinOutput(0, pinProps,
-				getContext()));
+		ServiceRegistration<IGPIOPinOutput> pinReg = Pi4jGPIOPinOutput
+				.registerGPIOPinOutput(pPin, pinProps, getContext());
+		setPin(pinReg);
 	}
 
 	/**
@@ -117,10 +114,10 @@ public class Activator implements BundleActivator {
 	 * want to add additional properties like so:
 	 * 
 	 * <pre>
-	 *  	protected Map<String, Object> getDefaultPinProps() {
-	 *         	Map<String, Object> pinProps = super.getDefaultPinProps();
-	 *    		pinProps.put("my.property", "my.value");
-	 *        }
+	 * protected Map&lt;String, Object&gt; getDefaultPinProps() {
+	 * 	Map&lt;String, Object&gt; pinProps = super.getDefaultPinProps();
+	 * 	pinProps.put(&quot;my.property&quot;, &quot;my.value&quot;);
+	 * }
 	 * </pre>
 	 * 
 	 * @return the properties.
@@ -183,7 +180,6 @@ public class Activator implements BundleActivator {
 		}
 		if (fPinReg != null) {
 			unRegisterServiceAsync();
-			fPinReg = null;
 		}
 	}
 
@@ -198,6 +194,7 @@ public class Activator implements BundleActivator {
 			@Override
 			public void run() {
 				getPin().unregister();
+				setPin(null);
 			}
 		});
 		thread.setName("Unregistering service (see bug https://bugs.eclipse.org/bugs/show_bug.cgi?id=448466)");

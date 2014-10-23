@@ -8,9 +8,6 @@
  ******************************************************************************/
 package org.eclipse.ecf.raspberrypi.gpio.pin1;
 
-import java.util.Map;
-
-import org.eclipse.ecf.raspberrypi.gpio.pi4j.Pi4jGPIOPinOutput;
 import org.osgi.framework.BundleContext;
 
 public class Activator extends org.eclipse.ecf.raspberrypi.gpio.pin0.Activator {
@@ -22,13 +19,8 @@ public class Activator extends org.eclipse.ecf.raspberrypi.gpio.pin0.Activator {
 	}
 	
 	@Override
-	public void start(BundleContext bundleContext) throws Exception {
-		super.start(bundleContext);
-		
-	}
-
-	public void registerPin(Map<String, Object> pinProps) {
-		// register GPIOPin 0 with the above export properties
-		setPin(Pi4jGPIOPinOutput.registerGPIOPinOutput(1, pinProps, getContext()));
+	public void start(BundleContext pBundleContext) throws Exception {
+		Activator.context = pBundleContext;
+		registerPin(1);
 	}
 }
