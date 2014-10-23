@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: ECF GPIO Test Consumer
 Bundle-SymbolicName: org.eclipse.ecf.raspberrypi.gpio.pin1
 Bundle-Version: 1.0.0.qualifier
-Bundle-Activator: org.eclipse.ecf.raspberrypi.gpio.pin0.Activator
+Bundle-Activator: org.eclipse.ecf.raspberrypi.gpio.pin1.Activator
 Bundle-Vendor: Eclipse.org - ECF
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Import-Package: org.eclipse.ecf.raspberrypi.gpio;version="1.0.0",
