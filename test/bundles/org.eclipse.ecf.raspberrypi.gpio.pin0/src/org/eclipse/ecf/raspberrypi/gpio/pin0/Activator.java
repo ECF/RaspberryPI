@@ -41,9 +41,17 @@ public class Activator implements BundleActivator {
 	@Override
 	public void start(BundleContext bundleContext) throws Exception {
 		Activator.context = bundleContext;
-		registerPin(0);
+		registerPin();
 		registerTracker();
 		setupInputListener();
+	}
+
+	/**
+	 * Override this to get the correct pin number.
+	 * @return
+	 */
+	protected int getPinNumber() {
+		return 0;
 	}
 
 	/**
@@ -66,10 +74,14 @@ public class Activator implements BundleActivator {
 					@Override
 					public IGPIOPinOutput addingService(
 							ServiceReference<IGPIOPinOutput> reference) {
+						IGPIOPinOutput pin = context.getService(reference);
+						if (pin.getPinId() != getPinNumber()) {
+							return null;
+						}
+
 						System.out.println("Adding GPIO Pin Output service.   id="
 								+ reference
 										.getProperty(IGPIOPinOutput.PIN_ID_PROP));
-						IGPIOPinOutput pin = context.getService(reference);
 						System.out.println("  current pin state is "
 								+ (pin.getState() ? "HIGH" : "LOW"));
 						System.out.println("  setting state to HIGH");
@@ -98,14 +110,12 @@ public class Activator implements BundleActivator {
 	}
 
 	/**
-	 * Registers the pin.
-	 * 
-	 * @param pPin
+	 * Registers the pin defined by {@link #getPinNumber()}.
 	 */
-	protected void registerPin(int pPin) {
+	protected void registerPin() {
 		Map<String, Object> pinProps = getDefaultPinProps();
 		ServiceRegistration<IGPIOPinOutput> pinReg = Pi4jGPIOPinOutput
-				.registerGPIOPinOutput(pPin, pinProps, getContext());
+				.registerGPIOPinOutput(getPinNumber(), pinProps, getContext());
 		setPin(pinReg);
 	}
 

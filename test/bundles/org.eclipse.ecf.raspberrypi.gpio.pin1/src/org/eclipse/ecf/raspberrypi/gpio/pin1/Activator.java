@@ -21,6 +21,10 @@ public class Activator extends org.eclipse.ecf.raspberrypi.gpio.pin0.Activator {
 	@Override
 	public void start(BundleContext pBundleContext) throws Exception {
 		Activator.context = pBundleContext;
-		registerPin(1);
+		registerPin();
+	}
+	
+	protected int getPinNumber(){
+		return 1;
 	}
 }
