@@ -19,7 +19,8 @@ public interface ILM35 {
 	/**
 	 * Temperature changed on the specified host.
 	 * 
-	 * @param data
+	 * @param pHost
+	 * @param pTemperature
 	 */
 	public void setTemperature(String pHost, double pTemperature);
 

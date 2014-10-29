@@ -22,7 +22,8 @@ public interface ILM35Async {
 	/**
 	 * Temperature changed on the specified host.
 	 * 
-	 * @param data
+	 * @param pHost
+	 * @param pTemperature
 	 */
 	public CompletableFuture<Void> setTemperatureAsync(String pHost, double pTemperature);
 
