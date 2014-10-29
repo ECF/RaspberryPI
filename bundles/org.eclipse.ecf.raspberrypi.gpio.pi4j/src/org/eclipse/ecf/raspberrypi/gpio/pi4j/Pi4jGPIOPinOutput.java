@@ -110,7 +110,8 @@ public class Pi4jGPIOPinOutput extends Pi4jGPIOPin implements IGPIOPinOutput {
 							Activator.getGPIOController().unprovisionPin(
 									((Pi4jGPIOPinOutput) service).pinImpl);
 						} catch (Exception e) {
-							e.printStackTrace();
+							System.out.println("Already done ..");
+//							e.printStackTrace();
 						}
 					}
 				}, (Dictionary<String, Object>) registerProps);
