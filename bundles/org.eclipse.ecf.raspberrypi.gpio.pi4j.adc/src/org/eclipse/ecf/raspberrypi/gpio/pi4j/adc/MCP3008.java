@@ -1,4 +1,12 @@
-// from: http://www.lediouris.net/RaspberryPI/ADC/readme.html
+/*******************************************************************************
+ * Copyright (c) 2014 Remain B.V. All rights reserved. 
+ * This program and the accompanying materials are made available under the terms 
+ * of the Eclipse Public License v1.0 which accompanies this distribution, and is
+ * available at http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors: Wim Jongman - initial API and implementation
+ ******************************************************************************/
+// copied from / inspired by: http://www.lediouris.net/RaspberryPI/ADC/readme.html
 package org.eclipse.ecf.raspberrypi.gpio.pi4j.adc;
 
 import java.net.InetAddress;
@@ -6,8 +14,8 @@ import java.net.UnknownHostException;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import org.eclipse.ecf.raspberrypi.gpio.ILM35;
-import org.eclipse.ecf.raspberrypi.gpio.ILM35Async;
+import org.eclipse.ecf.raspberrypi.gpio.IAnalogService;
+import org.eclipse.ecf.raspberrypi.gpio.IAnalogServiceAsync;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 import org.osgi.util.tracker.ServiceTracker;
@@ -33,7 +41,7 @@ public class MCP3008 {
 	private double fCurrentTemp = 0;
 
 	public class LM35TrackerCustomizer implements
-			ServiceTrackerCustomizer<ILM35, ILM35> {
+			ServiceTrackerCustomizer<IAnalogService, IAnalogService> {
 
 		private BundleContext context;
 
@@ -42,22 +50,22 @@ public class MCP3008 {
 		}
 
 		@Override
-		public ILM35 addingService(ServiceReference<ILM35> reference) {
-			System.out.println("LM35 client found.");
-			ILM35 service = context.getService(reference);
-			service.setTemperature(getHostName(), getCurrentTemp());
+		public IAnalogService addingService(ServiceReference<IAnalogService> reference) {
+			System.out.println("IAnalogService client found.");
+			IAnalogService service = context.getService(reference);
+			service.setValue(getHostName(), "LM35", getCurrentTemp());
 			return service;
 		}
 
 		@Override
-		public void modifiedService(ServiceReference<ILM35> pReference,
-				ILM35 pService) {
+		public void modifiedService(ServiceReference<IAnalogService> pReference,
+				IAnalogService pService) {
 		}
 
 		@Override
-		public void removedService(ServiceReference<ILM35> reference,
-				ILM35 service) {
-			System.out.println("LM35 client found.");
+		public void removedService(ServiceReference<IAnalogService> reference,
+				IAnalogService service) {
+			System.out.println("IAnalogService client lost.");
 		}
 
 		public void close() {
@@ -72,21 +80,15 @@ public class MCP3008 {
 
 		@Override
 		public void run() {
-
 			while (run) {
 				int adc = readAdc();
 				int postAdjust = Math.abs(adc - lastRead);
 				if (postAdjust > tolerance) {
-					int volume = (int) (adc / 10.23); // [0, 1023] ~ [0x0000,
-														// 0x03FF] ~ [0&0,
-														// 0&1111111111]
 					double volts = (adc * 3.3) / 1024;
 					double temperature = volts / (10.0 / 1000);
-					System.out.println("\r\rVolume:" + volume + "%  Temp:"
-							+ temperature + "C");
 					lastRead = adc;
 					setCurrentTemp(temperature);
-					notifyLM35Services(temperature);
+					notifyAnalogClientServices(temperature);
 				}
 				try {
 					Thread.sleep(LM35_POLLING_INTERVAL_MS);
@@ -121,7 +123,7 @@ public class MCP3008 {
 	private GpioPinDigitalOutput clockOutput = null;
 	private GpioPinDigitalOutput chipSelectOutput = null;
 
-	private ServiceTracker<ILM35, ILM35> fTracker;
+	private ServiceTracker<IAnalogService, IAnalogService> fTracker;
 
 	private Timer fTimer;
 
@@ -131,12 +133,11 @@ public class MCP3008 {
 	public MCP3008() {
 	}
 
-	protected void notifyLM35Services(double temperature) {
-
-		ILM35[] services = fTracker.getServices(new ILM35[0]);
+	protected void notifyAnalogClientServices(double temperature) {
+		IAnalogService[] services = fTracker.getServices(new IAnalogService[0]);
 		System.out.println("Notyfing " + services.length + " services.");
-		for (ILM35 service : services) {
-			((ILM35Async) service).setTemperatureAsync(getHostName(),
+		for (IAnalogService service : services) {
+			((IAnalogServiceAsync) service).setValueAsync(getHostName(), "LM35",
 					temperature); // do not wait for result.
 		}
 	}
@@ -261,14 +262,14 @@ public class MCP3008 {
 	}
 
 	/**
-	 * Initializes the board and sets up a tracker to monitor for ILM35 remote
+	 * Initializes the board and sets up a tracker to monitor for IAnalogService remote
 	 * services.
 	 * 
 	 * @param ctxt
 	 */
 	public void start(BundleContext ctxt) {
 		provionsPins();
-		fTracker = new ServiceTracker<>(ctxt, ILM35.class,
+		fTracker = new ServiceTracker<>(ctxt, IAnalogService.class,
 				new LM35TrackerCustomizer(ctxt));
 		fTracker.open();
 		fTimer = new Timer("MCP3008 Polling Thread", true);
