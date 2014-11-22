@@ -27,6 +27,6 @@ public class Activator extends AbstractPinManager implements BundleActivator {
 
 	@Override
 	public int getPinNumber() {
-		return 1;
+		return 0;
 	}
 }

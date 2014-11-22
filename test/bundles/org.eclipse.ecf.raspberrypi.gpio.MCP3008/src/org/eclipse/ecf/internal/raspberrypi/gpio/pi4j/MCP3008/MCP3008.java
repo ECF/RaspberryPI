@@ -7,15 +7,15 @@
  * Contributors: Wim Jongman - initial API and implementation
  ******************************************************************************/
 // copied from / inspired by: http://www.lediouris.net/RaspberryPI/ADC/readme.html
-package org.eclipse.ecf.raspberrypi.gpio.pi4j.adc;
+package org.eclipse.ecf.internal.raspberrypi.gpio.pi4j.MCP3008;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import org.eclipse.ecf.raspberrypi.gpio.IAnalogService;
-import org.eclipse.ecf.raspberrypi.gpio.IAnalogServiceAsync;
+import org.eclipse.ecf.raspberrypi.gpio.pi4j.adc.IAnalogService;
+import org.eclipse.ecf.raspberrypi.gpio.pi4j.adc.IAnalogServiceAsync;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 import org.osgi.util.tracker.ServiceTracker;

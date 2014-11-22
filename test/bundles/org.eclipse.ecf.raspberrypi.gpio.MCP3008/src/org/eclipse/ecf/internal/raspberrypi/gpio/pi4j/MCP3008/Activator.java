@@ -6,9 +6,8 @@
  * 
  * Contributors: Scott Lewis - initial API and implementation
  ******************************************************************************/
-package org.eclipse.ecf.internal.raspberrypi.gpio.pi4j.adc;
+package org.eclipse.ecf.internal.raspberrypi.gpio.pi4j.MCP3008;
 
-import org.eclipse.ecf.raspberrypi.gpio.pi4j.adc.MCP3008;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 

@@ -6,7 +6,7 @@
  * 
  * Contributors: Wim Jongman - initial API and implementation
  ******************************************************************************/
-package org.eclipse.ecf.raspberrypi.gpio;
+package org.eclipse.ecf.raspberrypi.gpio.pi4j.adc;
 
 /**
  * This class represents an analog service. It could be a temperature
