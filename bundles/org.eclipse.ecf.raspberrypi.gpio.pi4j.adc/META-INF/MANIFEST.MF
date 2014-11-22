@@ -5,12 +5,5 @@ Bundle-SymbolicName: org.eclipse.ecf.raspberrypi.gpio.pi4j.adc
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: Eclipse.org - ECF
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Import-Package: com.pi4j.io.gpio,
- com.pi4j.io.gpio.event,
- com.pi4j.io.gpio.exception,
- com.pi4j.io.gpio.impl,
- org.eclipse.ecf.raspberrypi.gpio;version="1.0.0",
- org.osgi.framework,
- org.osgi.util.tracker;version="1.5.1"
 Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.ecf.raspberrypi.gpio.pi4j.adc
