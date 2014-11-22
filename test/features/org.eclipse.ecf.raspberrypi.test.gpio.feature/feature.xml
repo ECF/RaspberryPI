@@ -32,13 +32,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.ecf.raspberrypi.test.gpio"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.osgi"
          download-size="0"
          install-size="0"
@@ -222,6 +215,41 @@
 
    <plugin
          id="org.eclipse.ecf.sharedobject"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.ecf.raspberrypi.gpio.MCP3008"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.ecf.raspberrypi.gpio.pi4j.adc"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.ecf.raspberrypi.gpio.pin0"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.ecf.raspberrypi.gpio.pin1"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.ecf.raspberrypi.test.gpio.ide"
          download-size="0"
          install-size="0"
          version="0.0.0"

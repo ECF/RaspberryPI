@@ -15,11 +15,21 @@ public abstract class AbstractGPIOPinEvent implements Serializable {
 
 	private final int pinId;
 
+	private Object fData;
+
 	public AbstractGPIOPinEvent(int pinId) {
 		this.pinId = pinId;
 	}
 
 	public int getPinId() {
 		return pinId;
+	}
+
+	public void setData(Object pData) {
+		this.fData = pData;
+	}
+
+	public Object getData() {
+		return fData;
 	}
 }

@@ -10,6 +10,10 @@ package org.eclipse.ecf.raspberrypi.gpio;
 
 import java.io.Serializable;
 
+/**
+ * A simple class to represent an input event.
+ *
+ */
 public class GPIOPinInputEvent extends AbstractGPIOPinEvent implements
 		Serializable {
 

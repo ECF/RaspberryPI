@@ -120,8 +120,12 @@
 	<modules>
 		<module>../../features/org.eclipse.ecf.raspberrypi.gpio.pi4j.feature</module>
 		<module>../../features/org.eclipse.ecf.raspberrypi.gpio.feature</module>
+		<module>../../test/bundles/org.eclipse.ecf.raspberrypi.gpio.pin0</module>
+		<module>../../test/bundles/org.eclipse.ecf.raspberrypi.gpio.pin1</module>
+		<module>../../test/bundles/org.eclipse.ecf.raspberrypi.gpio.MCP3008</module>
 		<module>../../bundles/org.eclipse.ecf.raspberrypi.gpio</module>
 		<module>../../bundles/org.eclipse.ecf.raspberrypi.gpio.pi4j</module>
+		<module>../../bundles/org.eclipse.ecf.raspberrypi.gpio.pi4j.adc</module>
 		<module>../../releng/org.eclipse.ecf.raspberrypi.gpio.site</module>
 		<module>../../bundles/com.pi4j</module>
 
