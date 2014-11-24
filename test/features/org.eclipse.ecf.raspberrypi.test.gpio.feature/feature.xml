@@ -53,13 +53,6 @@
          unpack="false"/>
 
    <plugin
-         id="pi4j-core"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.equinox.console"
          download-size="0"
          install-size="0"
@@ -249,10 +242,9 @@
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.ecf.raspberrypi.test.gpio.ide"
+         id="com.pi4j"
          download-size="0"
          install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+         version="0.0.0"/>
 
 </feature>

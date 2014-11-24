@@ -34,6 +34,7 @@
 
    <configurations>
       <plugin id="ch.ethz.iks.slp" autoStart="true" startLevel="0" />
+      <plugin id="com.pi4j" autoStart="true" startLevel="0" />
       <plugin id="org.apache.felix.gogo.command" autoStart="true" startLevel="0" />
       <plugin id="org.apache.felix.gogo.runtime" autoStart="true" startLevel="0" />
       <plugin id="org.apache.felix.gogo.shell" autoStart="true" startLevel="0" />
@@ -50,7 +51,8 @@
       <plugin id="org.eclipse.ecf.provider.remoteservice" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.ecf.raspberrypi.gpio" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.ecf.raspberrypi.gpio.pi4j" autoStart="true" startLevel="0" />
-      <plugin id="org.eclipse.ecf.raspberrypi.test.gpio" autoStart="true" startLevel="6" />
+      <plugin id="org.eclipse.ecf.raspberrypi.gpio.pin0" autoStart="true" startLevel="6" />
+      <plugin id="org.eclipse.ecf.raspberrypi.gpio.pin1" autoStart="true" startLevel="6" />
       <plugin id="org.eclipse.ecf.remoteservice" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.ecf.remoteservice.asyncproxy" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.ecf.sharedobject" autoStart="true" startLevel="0" />
@@ -62,7 +64,6 @@
       <plugin id="org.eclipse.osgi.services" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.osgi.services.remoteserviceadmin" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.osgi.util" autoStart="true" startLevel="0" />
-      <plugin id="pi4j-core" autoStart="true" startLevel="0" />
    </configurations>
 
 </product>
