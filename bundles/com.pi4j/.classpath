@@ -3,7 +3,11 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry exported="true" kind="lib" path="pi4j-0.0.5/pi4j-core.jar"/>
+	<classpathentry exported="true" kind="lib" path="pi4j-0.0.5/pi4j-core.jar" sourcepath="pi4j-0.0.5/pi4j-core-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/com.pi4j/pi4j-0.0.5/pi4j-core-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry exported="true" kind="lib" path="pi4j-0.0.5/pi4j-device.jar"/>
 	<classpathentry exported="true" kind="lib" path="pi4j-0.0.5/pi4j-gpio-extension.jar"/>
 	<classpathentry exported="true" kind="lib" path="pi4j-0.0.5/pi4j-service.jar"/>
