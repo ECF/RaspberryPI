@@ -7,7 +7,7 @@
 
 
 	<properties>
-		<tycho-version>0.21.0</tycho-version>
+    <tycho-version>0.26.0</tycho-version>
 	</properties>
 
 	<pluginRepositories>
@@ -19,14 +19,14 @@
 
 	<repositories>
 		<repository>
-			<id>luna</id>
+			<id>neon</id>
 			<layout>p2</layout>
-			<url>http://download.eclipse.org/releases/luna</url>
+			<url>http://download.eclipse.org/releases/neon</url>
 		</repository>
 		
 		<repository>
 			<id>ecf-latest</id>
-			<url>http://download.ecf-project.org/repo/C-HEAD-sdk.feature/lastSuccessful/archive/site.p2/</url>
+			<url>http://download.eclipse.org/rt/ecf/snapshot/site.p2/</url>
 			<layout>p2</layout>
 		</repository>
 		
@@ -65,64 +65,48 @@
 				<extensions>true</extensions>
 			</plugin>
 
-			<plugin>
-				<groupId>org.eclipse.tycho</groupId>
-				<artifactId>target-platform-configuration</artifactId>
-				<version>${tycho-version}</version>
-				<configuration>
-					<!-- <allowConflictingDependencies>true</allowConflictingDependencies> -->
-					<environments>
-						<environment>
-							<os>win32</os>
-							<ws>win32</ws>
-							<arch>x86_64</arch>
-						</environment>
-
-						<environment>
-							<os>win32</os>
-							<ws>win32</ws>
-							<arch>x86</arch>
-						</environment>
-
-						<environment>
-							<os>linux</os>
-							<ws>gtk</ws>
-							<arch>x86</arch>
-						</environment>
-
-						<environment>
-							<os>macosx</os>
-							<ws>cocoa</ws>
-							<arch>x86_64</arch>
-						</environment>
-						
-						<environment>
-							<os>linux</os>
-							<ws>gtk</ws>
-							<arch>x86_64</arch>
-						</environment>
-						
-						<environment>
-							<os>win32</os>
-							<ws>win32</ws>
-							<arch>x86</arch>
-						</environment>
-
-					</environments>
-					<filters>
-						<!-- example 1: restrict version of a bundle, alternative: <version> 
-							for selecting exactly one versions <filter> <type>eclipse-plugin</type> <id>org.eclipse.osgi</id> 
-							<restrictTo> <versionRange>[3.6,3.7)</versionRange> </restrictTo> </filter> -->
-						<!-- remove all providers of the package javax.persistence except the 
-							bundle javax.persistence <filter> <type>java-package</type> <id>javax.persistence</id> 
-							<restrictTo> <type>eclipse-plugin</type> <id>javax.persistence</id> </restrictTo> 
-							</filter> -->
-						<!-- work around Equinox bug 348045, indigo, early releases juno <filter> 
-							<type>p2-installable-unit</type> <id>org.eclipse.equinox.servletbridge.extensionbundle</id> 
-							<removeAll /> </filter> -->
-					</filters>
-				</configuration>
-			</plugin>
+			      <plugin>
+        <groupId>org.eclipse.tycho</groupId>
+        <artifactId>target-platform-configuration</artifactId>
+        <version>${tycho-version}</version>
+        <configuration>
+          <target>
+            <artifact>
+              <groupId>gpio</groupId>
+              <artifactId>org.eclipse.ecf.raspberrypi.gpio.pi4j.target</artifactId>
+              <classifier>pi4j</classifier>
+              <version>1.0.0-SNAPSHOT</version>
+            </artifact>
+          </target>
+          <environments>
+            <environment>
+              <os>win32</os>
+              <ws>win32</ws>
+              <arch>x86</arch>
+            </environment>
+            <environment>
+              <os>win32</os>
+              <ws>win32</ws>
+              <arch>x86_64</arch>
+            </environment>
+            <environment>
+              <os>linux</os>
+              <ws>gtk</ws>
+              <arch>x86</arch>
+            </environment>
+            <environment>
+              <os>linux</os>
+              <ws>gtk</ws>
+              <arch>x86_64</arch>
+            </environment>
+            <environment>
+              <os>macosx</os>
+              <ws>cocoa</ws>
+              <arch>x86_64</arch>
+            </environment>
+          </environments>
+        </configuration>
+      </plugin>
 		</plugins>
 	</build>
 	<groupId>gpio</groupId>
@@ -132,5 +116,6 @@
 		<module>../../bundles/org.eclipse.ecf.raspberrypi.gpio</module>
 		<module>../../bundles/org.eclipse.ecf.raspberrypi.gpio.pi4j</module>
 		<module>../../releng/org.eclipse.ecf.raspberrypi.gpio.site</module>
+		<module>../../releng/org.eclipse.ecf.raspberrypi.gpio.pi4j.target</module>
 	</modules>
 </project>
