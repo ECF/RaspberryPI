@@ -7,7 +7,7 @@
 
 
 	<properties>
-    <tycho-version>0.26.0</tycho-version>
+    <tycho-version>1.0.0</tycho-version>
 	</properties>
 
 	<pluginRepositories>
@@ -16,30 +16,6 @@
 			<url>https://oss.sonatype.org/content/groups/public/</url>
 		</pluginRepository>
 	</pluginRepositories>
-
-	<repositories>
-		<repository>
-			<id>neon</id>
-			<layout>p2</layout>
-			<url>http://download.eclipse.org/releases/neon</url>
-		</repository>
-		
-		<repository>
-			<id>ecf-latest</id>
-			<url>http://download.eclipse.org/rt/ecf/latest/site.p2/</url>
-			<layout>p2</layout>
-		</repository>
-		
-	<repository>
-		<id>oss-snapshots-repo</id>
-		<name>Sonatype OSS Maven Repository</name>
-		<url>https://oss.sonatype.org/content/groups/public</url>
-		<snapshots>
-			<enabled>true</enabled>
-			<updatePolicy>always</updatePolicy>
-		</snapshots>
-	</repository>
-	</repositories>
 
   <dependencies>
   	<dependency>
