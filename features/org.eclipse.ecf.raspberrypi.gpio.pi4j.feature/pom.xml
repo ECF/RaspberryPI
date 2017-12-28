@@ -11,12 +11,4 @@
   
   <artifactId>org.eclipse.ecf.raspberrypi.gpio.pi4j.feature</artifactId>
   <packaging>eclipse-feature</packaging>
-    <dependencies>
-  	<dependency>
-  		<groupId>com.pi4j</groupId>
-  		<artifactId>pi4j-core</artifactId>
-  		<version>1.1</version>
-  	</dependency>
-  </dependencies>
-  
   </project>

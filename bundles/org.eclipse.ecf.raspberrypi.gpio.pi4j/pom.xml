@@ -10,11 +10,4 @@
   </parent>
   <artifactId>org.eclipse.ecf.raspberrypi.gpio.pi4j</artifactId>
   <packaging>eclipse-plugin</packaging>
-  <dependencies>
-  	<dependency>
-  		<groupId>com.pi4j</groupId>
-  		<artifactId>pi4j-core</artifactId>
-  		<version>1.1</version>
-  	</dependency>
-  </dependencies>
 </project>
