@@ -29,12 +29,6 @@
          unpack="false"/>
 
    <plugin
-         id="com.pi4j"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
          id="org.eclipse.ecf.raspberrypi.gpio.pi4j.adc"
          download-size="0"
          install-size="0"
@@ -57,6 +51,13 @@
 
    <plugin
          id="org.eclipse.ecf.raspberrypi.gpio.MCP3008"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="pi4j-core"
          download-size="0"
          install-size="0"
          version="0.0.0"
